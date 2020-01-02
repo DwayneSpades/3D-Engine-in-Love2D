@@ -1,5 +1,6 @@
 require 'libraries/classHandler'
 
+--Written by Preston Adams
 --steps to render 3d scene 
 
 --1 define camera matrix
@@ -77,30 +78,33 @@ function love.load()
     {0,0,0,0}
   }
   
-  theta = 0.005
-  
+  thetaX = 0.000
+  thetaY = 0.000
+  thetaZ = 0.000
+  accel = 0.0002
+  drag=0.0001
   rSpeed = 0
 
   rotationMatrixX = matrix:new
   {
       {1,0,0,0},
-      {0,math.cos(theta),-math.sin(theta),0},
-      {0,math.sin(theta),math.cos(theta),0},
+      {0,math.cos(thetaX),-math.sin(thetaX),0},
+      {0,math.sin(thetaX),math.cos(thetaX),0},
       {0,0,0,1}
   }
   
   rotationMatrixY = matrix:new
   {
-      {math.cos(theta),0,math.sin(theta),0},
+      {math.cos(thetaY),0,math.sin(thetaY),0},
       {0,1,0,0},
-      {-math.sin(theta),0,math.cos(theta),0},
+      {-math.sin(thetaY),0,math.cos(thetaY),0},
       {0,0,0,1}
   }
   
   rotationMatrixZ = matrix:new
   {
-      {math.cos(theta),-math.sin(theta),0,0},
-      {math.sin(theta),math.cos(theta),0,0},
+      {math.cos(thetaZ),-math.sin(thetaZ),0,0},
+      {math.sin(thetaZ),math.cos(thetaZ),0,0},
       {0,0,1,0},
       {0,0,0,1}
   }
@@ -361,17 +365,15 @@ function love.load()
   
   origin = {tri1,tri2,tri3,tri4,tri5,tri6,tri7,tri8,tri9,tri10,tri11,tri12}
   
-  for i,v in ipairs(model5) do
-   
-      
- 
-    
-    
-    
-
-  end
   
+  timeLimit =200
+  rotTimer = timeLimit
+  rotTimer2 = timeLimit
   
+  autoRotActive=true
+  axisToRot =1
+  
+  love.window.setTitle('3D Cube Demo')
   --tri1={point1=p1,point2=p2,point3=p3}
  
 end
@@ -673,20 +675,103 @@ end
 
 
 function love.update()
-  for i,v in ipairs(model5)do
-    roto = triangle:new()
-    
-    
-    
-    
+  if thetaX>0 then
+    thetaX=thetaX-drag
+  end
+  
+  if thetaX<0 then
+    thetaX=thetaX+drag
+  end
+  
+  if thetaY>0 then
+    thetaY=thetaY-drag
+  end
+  
+  if thetaY<0 then
+    thetaY=thetaY+drag
   end
   
   
   
+ 
+  rotTimer=rotTimer-1
+  
+  if (rotTimer<=0) then
+    rotTimer = timeLimit
+    axisToRot = math.random(1,4)
+    autoRotActive=true
+  end
+  
+  if autoRotActive then
+    if axisToRot==1 then
+      thetaX=thetaX+accel
+    elseif axisToRot==2 then
+      thetaY=thetaY+accel
+    elseif axisToRot==3 then
+      thetaX=thetaX-accel
+    elseif axisToRot==4 then
+      thetaY=thetaY-accel
+    end
+    
+  end
+  
+  if love.keyboard.isDown('up') then
+    autoRotActive=false
+    thetaX=thetaX-accel
+  end
+  if love.keyboard.isDown('down') then
+    autoRotActive=false
+    thetaX=thetaX+accel
+  end
+  if love.keyboard.isDown('left') then
+    autoRotActive=false
+    thetaY=thetaY+accel
+  end
+  if love.keyboard.isDown('right') then
+    autoRotActive=false
+    thetaY=thetaY-accel
+  end
+  
+  rotationMatrixX = matrix:new
+  {
+      {1,0,0,0},
+      {0,math.cos(thetaX),-math.sin(thetaX),0},
+      {0,math.sin(thetaX),math.cos(thetaX),0},
+      {0,0,0,1}
+  }
+  
+  rotationMatrixY = matrix:new
+  {
+      {math.cos(thetaY),0,math.sin(thetaY),0},
+      {0,1,0,0},
+      {-math.sin(thetaY),0,math.cos(thetaY),0},
+      {0,0,0,1}
+  }
+  
+  rotationMatrixZ = matrix:new
+  {
+      {math.cos(thetaZ),-math.sin(thetaZ),0,0},
+      {math.sin(thetaZ),math.cos(thetaZ),0,0},
+      {0,0,1,0},
+      {0,0,0,1}
+  }
+  
+  
 end
 
+function love.keypressed(key)
+    if key=='escape' then
+      love.event.push('quit')
+    end
+    
+end
+
+
 function love.draw()
-  
+  love.graphics.print("Press and hold the arrow keys to rotate manually.",0,0,0,2,2)
+  love.graphics.print("auto rotation turns on if no valid keys are pressed",0,32,0,1,1)
+  love.graphics.print("press escape to close program.",0,560,0,2,2)
+  love.graphics.print("Written by Preston Adams",380,580,0,1,1)
   temp1=point:new()
   temp2=point:new()
   temp3=point:new()
@@ -695,17 +780,17 @@ function love.draw()
    triProjected = triangle:new()
    triProjected:create(temp1,temp2,temp3)
     
-    --v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixX)
-    --v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixX)
-    --v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixX)
+    v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixX)
+    v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixX)
+    v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixX)
     
     v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixY)
     v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixY)
     v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixY)
     
-    --v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixZ)
-    --v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixZ)
-    --v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixZ)
+   -- v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixZ)
+   -- v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixZ)
+   -- v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixZ)
     
     triProjected.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixX)
     triProjected.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixX)
@@ -719,13 +804,13 @@ function love.draw()
     triProjected.point2.x = triProjected.point2.x
     triProjected.point3.x = triProjected.point3.x
     
-    triProjected.point1.y = triProjected.point1.y+2
-    triProjected.point2.y = triProjected.point2.y+2
-    triProjected.point3.y = triProjected.point3.y+2
+    triProjected.point1.y = triProjected.point1.y
+    triProjected.point2.y = triProjected.point2.y
+    triProjected.point3.y = triProjected.point3.y
     
-    triProjected.point1.z = triProjected.point1.z-5
-    triProjected.point2.z = triProjected.point2.z-5
-    triProjected.point3.z = triProjected.point3.z-5
+    triProjected.point1.z = triProjected.point1.z-2.5
+    triProjected.point2.z = triProjected.point2.z-2.5
+    triProjected.point3.z = triProjected.point3.z-2.5
    
    triProjected.point1 = multiplyVectorByMatrix(triProjected.point1,iprojectionMatrix)
    triProjected.point2 = multiplyVectorByMatrix(triProjected.point2,iprojectionMatrix)

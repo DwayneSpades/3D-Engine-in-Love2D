@@ -5,7 +5,7 @@ function love.conf(t)
   
   
   
-  t.identity = 'Break Shell'  
+  t.identity = '3D Cube Demo'  
   
    
 end
