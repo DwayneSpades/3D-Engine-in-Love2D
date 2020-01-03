@@ -1,5 +1,9 @@
 require 'libraries/classHandler'
-
+require 'libraries/3DMath'
+require 'libraries/3DDemos'
+require 'libraries/3DDrawCalls'
+require 'libraries/objParser'
+require 'assets/model1'
 --Written by Preston Adams
 --steps to render 3d scene 
 
@@ -121,22 +125,23 @@ function love.load()
   
   cube = 
     {
-      {
-        {-1,-1,-1}, -- points
-        {-1,-1,1},
-        {1,-1,1},
-        {1,-1,-1},
-        {-1,1,-1},
-        {-1,1,1},
-        {1,1,1},
-        {1,1,-1}
+      points={
+        {x=-1,y=-1,z=-1}, -- points
+        {x=-1,y=-1,z=1},
+        {x=1,y=-1,z=1},
+        {x=1,y=-1,z=-1},
+        {x=-1,y=1,z=-1},
+        {x=-1,y=1,z=1},
+        {x=1,y=1,z=1},
+        {x=1,y=1,z=-1}
       },
-      {
-        {1,2}, -- lines
-        {2,3},
-        {3,4},
-        {4,1},
-        {5,6},
+      edges={
+        {1,3},
+        {3,2},
+        {2,1},-- lines
+        {1,4},
+        {4,3},
+        {3,1},
         {6,7},
         {7,8},
         {8,5},
@@ -146,57 +151,9 @@ function love.load()
         {4,8}
       }
     }
-  
---[[  
-  unitCube.tris=
-  {
-    { 
-      {-1,-1,1}, 
-      {-1,1,1}, 
-      {1,1,1},
-      {-1,-1,1}, 
-      {1,1,1}, 
-      {1,-1,1},
- 
-      {1,-1,1}, 
-      {1,1,1}, 
-      {1,1,-1},
-      {1,-1,1}, 
-      {1,1,-1}, 
-      {1,-1,-1},
-    
-      {1,-1,-1}, 
-      {1,1,-1}, 
-      {-1,1,-1},
-      {1,-1,-1}, 
-      {-1,1,-1}, 
-      {-1,-1,-1},
-    
-      {-1,-1,-1}, 
-      {-1,1,-1}, 
-      {-1,1,1},
-      {-1,-1,-1}, 
-      {-1,1,1}, 
-      {-1,-1,1},
-    
-      {-1,-1,1}, 
-      {-1,-1,-1}, 
-      {1,-1,-1},
-      {-1,-1,1}, 
-      {1,-1,-1}, 
-      {1,-1,1},
-    
-      {-1,1,1}, 
-      {-1,1,-1}, 
-      {1,1,-1} ,
-      {-1,1,1}, 
-      {1,1,-1}, 
-      {1,1,1}
+  --rtiangles from mesh
+  cube.tris={}
 
-    }
-  }
-]]
-  
   cam = object:inherit{0,0,-2.5}
   scaler =100
   
@@ -242,12 +199,7 @@ function love.load()
   vect1 = flipVector(vect1)
   printVector(vect1)
   --printVector(vect2)
-  
-  p1 = point:new()
-  p2 = point:new()
-  p3 = point:new()
-  p4 = point:new()
-  p5 = point:new()
+
   p6 = point:new()
   
   p7 = point:new()
@@ -284,41 +236,37 @@ function love.load()
   p36 = point:new()
   
   
-  p1:create(-1,-1,1)
-  p2:create(-1,1,1)
-  p3:create(1,1,1)
-  p4:create(-1,-1,1)
-  p5:create(1,1,1)
-  p6:create(1,-1,1)
+  p1 = point:new{x=-1,y=-1,z=1}
+  p2 = point:new{x=-1,y=1,z=1}
+  p3 = point:new{x=1,y=1,z=1}
+  p4 = point:new{x=-1,y=-1,z=1}
+  p5 = point:new{x=1,y=1,z=1}
   
+  p6:create(1,-1,1)
   p7:create(1,-1,1)
   p8:create(1,1,1)
   p9:create(1,1,-1)
   p10:create(1,-1,1)
   p11:create(1,1,-1)
   p12:create(1,-1,-1)
-  
   p13:create(1,-1,-1)
   p14:create(1,1,-1)
   p15:create(-1,1,-1)
   p16:create(1,-1,-1)
   p17:create(-1,1,-1)
   p18:create(-1,-1,-1)
-  
   p19:create(-1,-1,-1)
   p20:create(-1,1,1)
   p21:create(-1,1,-1)
   p22:create(-1,-1,-1)
   p23:create(-1,-1,1)
   p24:create(-1,1,1)
-  
   p25:create(-1,1,1)
   p26:create(-1,1,-1)
   p27:create(1,1,-1)
   p28:create(-1,1,1)
   p29:create(1,1,-1)
   p30:create(1,1,1)
-  
   p31:create(-1,-1,1)
   p32:create(-1,-1,-1)
   p33:create(1,-1,-1)
@@ -359,10 +307,15 @@ function love.load()
   pp:create(0,0,0)
   
   triTranslated:create(p1,p2,p3)
-
+  
+  
+  makeObject()
   
   model5 = {tri1,tri2,tri3,tri4,tri5,tri6,tri7,tri8,tri9,tri10,tri11,tri12}
-  
+  speed = 5.05
+  Zpos = 25.5
+  Ypos = 0
+  Xpos = 0
   origin = {tri1,tri2,tri3,tri4,tri5,tri6,tri7,tri8,tri9,tri10,tri11,tri12}
   
   
@@ -375,14 +328,13 @@ function love.load()
   
   love.window.setTitle('3D Cube Demo')
   --tri1={point1=p1,point2=p2,point3=p3}
- 
+ --readObjFile('assets/deer.obj')
 end
 
-function drawMesh(mesh)
-  for i,v in ipairs(mesh[1]) do
-    drawLine(mesh[1][i],mesh[1][i])
+function drawObject(Mesh)
+  for i,v in ipairs(mesh[2]) do
+    
   end
- 
 end
 
 function drawLine(p1,p2)
@@ -444,405 +396,25 @@ function setMatrix()
   return temp
 end
 
-function printPoint(pon)
-  
-  print('-----------')
-  print('Point:')
-
-  print(pon.x)
-  print(pon.y)
-  print(pon.z)
-  print(pon.w)
-end
-
-function printVector(vec)
-  
-  print('-----------')
-  print('Vertex:')
-
-  print(vec.x)
-  print(vec.y)
-  print(vec.z)
-  print(vec.w)
-end
-
-function setVector(vec,x,y,z)
-  vec.x=x
-  vec.y=y
-  vec.z=z
-end
-
-function printMatrice(mat)
-  
-  print('-----------')
-  print('matrix:')
-  
-  for i=1 , 4 do
-  
-    print(mat[i][1]..' '..mat[i][2]..' '..mat[i][3]..' '..mat[i][4])
-    
-  end
-  
-end
-
-function multiplyMatrices(mat1,mat2)
-  
-  res = matrix:new()
-  res = setZeroMatrix()
-
-  print('multiplying:')
-  
-  --row 1
-  res[1][1]= mat1[1][1] * mat2[1][1] + mat1[2][1] * mat2[1][2] + mat1[3][1] * mat2[1][3] + mat1[4][1] * mat2[1][4]
-  res[2][1]= mat1[1][1] * mat2[2][1] + mat1[2][1] * mat2[2][2] + mat1[3][1] * mat2[2][3] + mat1[4][1] * mat2[2][4]
-  res[3][1]= mat1[1][1] * mat2[3][1] + mat1[2][1] * mat2[3][2] + mat1[3][1] * mat2[3][3] + mat1[4][1] * mat2[3][4]
-  res[4][1]= mat1[1][1] * mat2[4][1] + mat1[2][1] * mat2[4][2] + mat1[3][1] * mat2[4][3] + mat1[4][1] * mat2[4][4]
-  
-    --row 2
-  res[1][2]= mat1[1][2] * mat2[1][1] + mat1[2][2] * mat2[1][2] + mat1[3][2] * mat2[1][3] + mat1[4][2] * mat2[1][4]
-  res[2][2]= mat1[1][2] * mat2[2][1] + mat1[2][2] * mat2[2][2] + mat1[3][2] * mat2[2][3] + mat1[4][2] * mat2[2][4]
-  res[3][2]= mat1[1][2] * mat2[3][1] + mat1[2][2] * mat2[3][2] + mat1[3][2] * mat2[3][3] + mat1[4][2] * mat2[3][4]
-  res[4][2]= mat1[1][2] * mat2[4][1] + mat1[2][2] * mat2[4][2] + mat1[3][2] * mat2[4][3] + mat1[4][2] * mat2[4][4]
-  
-    --row 3
-  res[1][3]= mat1[1][3] * mat2[1][1] + mat1[2][3] * mat2[1][2] + mat1[3][3] * mat2[1][3] + mat1[4][3] * mat2[1][4]
-  res[2][3]= mat1[1][3] * mat2[2][1] + mat1[2][3] * mat2[2][2] + mat1[3][3] * mat2[2][3] + mat1[4][3] * mat2[2][4]
-  res[3][3]= mat1[1][3] * mat2[3][1] + mat1[2][3] * mat2[3][2] + mat1[3][3] * mat2[3][3] + mat1[4][3] * mat2[3][4]
-  res[4][3]= mat1[1][3] * mat2[4][1] + mat1[2][3] * mat2[4][2] + mat1[3][3] * mat2[4][3] + mat1[4][3] * mat2[4][4]
-  
-    --row 4
-  res[1][4]= mat1[1][4] * mat2[1][1] + mat1[2][4] * mat2[1][2] + mat1[3][4] * mat2[1][3] + mat1[4][4] * mat2[1][4]
-  res[2][4]= mat1[1][4] * mat2[2][1] + mat1[2][4] * mat2[2][2] + mat1[3][4] * mat2[2][3] + mat1[4][4] * mat2[2][4]
-  res[3][4]= mat1[1][4] * mat2[3][1] + mat1[2][4] * mat2[3][2] + mat1[3][4] * mat2[3][3] + mat1[4][4] * mat2[3][4]
-  res[4][4]= mat1[1][4] * mat2[4][1] + mat1[2][4] * mat2[4][2] + mat1[3][4] * mat2[4][3] + mat1[4][4] * mat2[4][4]
-  
-  
-   --printMatrice(res)
-  
-  return res
-end
- 
- function multiplyVectorByMatrix(vect,mat)
-  res = point:new()
-  
-  res.x = vect.x * mat[1][1] + vect.y * mat[2][1] + vect.z * mat[3][1] + mat[4][1] 
-  res.y = vect.x * mat[1][2] + vect.y * mat[2][2] + vect.z * mat[3][2] + mat[4][2]
-  res.z = vect.x * mat[1][3] + vect.y * mat[2][3] + vect.z * mat[3][3] + mat[4][3]
-  res.w = vect.x * mat[1][4] + vect.y * mat[2][4] + vect.z * mat[3][4] + mat[4][4]
-  
-  if res.w~=0 then
-    res = divideVector(res,res.w)
-  end
-  
-  --printVector(res)
-  
-  return res
-   
- end 
-
-function addVectors(vec1,vec2)
-  res = vect3D:new()
-  
-  res.x = vec1.x + vec2.x
-  res.y = vec1.y + vec2.y
-  res.z = vec1.z + vec2.z
-  --res.w = vec1.w + vec2.w
-  
-  return res
-end
-
-
-function subtractVectors(vec1,vec2)
-  res = vect3D:new()
-  
-  res.x = vec1.x - vec2.x
-  res.y = vec1.y - vec2.y
-  res.z = vec1.z - vec2.z
-  --res.w = vec1.w - vec2.w
-  
-  return res
-end
-
-function multiplyVectors(vec1,vec2)
-  res = vect3D:new()
-  
-  res.x = vec1.x * vec2.x
-  res.y = vec1.y * vec2.y
-  res.z = vec1.z * vec2.z
-  --res.w = vec1.w * vec2.w
-  
-  return res
-end
-
-
-function divideVectors(vec1,vec2)
-  res = vect3D:new()
-  
-  res.x = vec1.x / vec2.x
-  res.y = vec1.y / vec2.y
-  res.z = vec1.z / vec2.z
-  --res.w = vec1.w / vec2.w
-  
-  return res
-end
-
-function addToVector(vec1,num)
-  res = vect3D:new()
-  
-  res.x = vec1.x + num
-  res.y = vec1.y + num
-  res.z = vec1.z + num
-  --res.w = vec1.w / num
-  
-  return res
-end
-
-
-function divideVector(vec1,num)
-  res = vect3D:new()
-  
-  res.x = vec1.x / num
-  res.y = vec1.y / num
-  res.z = vec1.z / num
-  --res.w = vec1.w / num
-  
-  return res
-end
-
-function flipVector(vec)
-    
-    res = vect3D:new()
-    
-    res.x = vec.x*-1
-    res.y = vec.y*-1
-    res.z = vec.z*-1
-    
-    return res
-end
-
-function normLengthVector(vec)
-  res = vect3D:new()
-  
-  res.x = vec.x * vec.x
-  res.y = vec.y * vec.y
-  res.z = vec.z * vec.z
-  --res.w = vec.w * vec.w
-  
-  result = math.sqrt(res.x + res.y + res.z )
-  
-  return result
-end
-
-function normalizeVector(vec)
-  
-  res = vect3D:new()
-  length = normLengthVector(vec)
-  
-  res.x = vec.x/length
-  res.y = vec.y/length
-  res.z = vec.z/length
-  
-  return res
-end
-
-function drawMseh(mesh)
-  for i,v in ipairs(mesh.tris) do
-    
-    for j,k in ipairs(v) do
-      multiplyVectorByMatrix(v[i],projectionMatrix)
-    end
-  end
-end
-
-
-function drawTriangle(tri)
- 
-  love.graphics.line(tri.point1.x,tri.point1.y,tri.point2.x,tri.point2.y)
-  love.graphics.line(tri.point2.x,tri.point2.y,tri.point3.x,tri.point3.y)
-  love.graphics.line(tri.point3.x,tri.point3.y,tri.point1.x,tri.point1.y)
-end
-
-function rotateShape(model)
-  
-end
-
-function rotateAxis()
-end
-
-function updateShape()
-  
-end
-
-
 function love.update()
-  if thetaX>0 then
-    thetaX=thetaX-drag
-  end
-  
-  if thetaX<0 then
-    thetaX=thetaX+drag
-  end
-  
-  if thetaY>0 then
-    thetaY=thetaY-drag
-  end
-  
-  if thetaY<0 then
-    thetaY=thetaY+drag
-  end
-  
-  
-  
- 
-  rotTimer=rotTimer-1
-  
-  if (rotTimer<=0) then
-    rotTimer = timeLimit
-    axisToRot = math.random(1,4)
-    autoRotActive=true
-  end
-  
-  if autoRotActive then
-    if axisToRot==1 then
-      thetaX=thetaX+accel
-    elseif axisToRot==2 then
-      thetaY=thetaY+accel
-    elseif axisToRot==3 then
-      thetaX=thetaX-accel
-    elseif axisToRot==4 then
-      thetaY=thetaY-accel
-    end
-    
-  end
-  
-  if love.keyboard.isDown('up') then
-    autoRotActive=false
-    thetaX=thetaX-accel
-  end
-  if love.keyboard.isDown('down') then
-    autoRotActive=false
-    thetaX=thetaX+accel
-  end
-  if love.keyboard.isDown('left') then
-    autoRotActive=false
-    thetaY=thetaY+accel
-  end
-  if love.keyboard.isDown('right') then
-    autoRotActive=false
-    thetaY=thetaY-accel
-  end
-  
-  rotationMatrixX = matrix:new
-  {
-      {1,0,0,0},
-      {0,math.cos(thetaX),-math.sin(thetaX),0},
-      {0,math.sin(thetaX),math.cos(thetaX),0},
-      {0,0,0,1}
-  }
-  
-  rotationMatrixY = matrix:new
-  {
-      {math.cos(thetaY),0,math.sin(thetaY),0},
-      {0,1,0,0},
-      {-math.sin(thetaY),0,math.cos(thetaY),0},
-      {0,0,0,1}
-  }
-  
-  rotationMatrixZ = matrix:new
-  {
-      {math.cos(thetaZ),-math.sin(thetaZ),0,0},
-      {math.sin(thetaZ),math.cos(thetaZ),0,0},
-      {0,0,1,0},
-      {0,0,0,1}
-  }
-  
-  
+  spinObjectDemo()
 end
 
 function love.keypressed(key)
     if key=='escape' then
       love.event.push('quit')
     end
-    
 end
-
 
 function love.draw()
   love.graphics.print("Press and hold the arrow keys to rotate manually.",0,0,0,2,2)
   love.graphics.print("auto rotation turns on if no valid keys are pressed",0,32,0,1,1)
   love.graphics.print("press escape to close program.",0,560,0,2,2)
   love.graphics.print("Written by Preston Adams",380,580,0,1,1)
-  temp1=point:new()
-  temp2=point:new()
-  temp3=point:new()
   
- for i,v in ipairs(model5) do
-   triProjected = triangle:new()
-   triProjected:create(temp1,temp2,temp3)
-    
-    v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixX)
-    v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixX)
-    v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixX)
-    
-    v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixY)
-    v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixY)
-    v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixY)
-    
-   -- v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixZ)
-   -- v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixZ)
-   -- v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixZ)
-    
-    triProjected.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixX)
-    triProjected.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixX)
-    triProjected.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixX)
-    
-    triProjected.point1.y = triProjected.point1.y
-    triProjected.point2.y = triProjected.point2.y
-    triProjected.point3.y = triProjected.point3.y
-    
-    triProjected.point1.x = triProjected.point1.x
-    triProjected.point2.x = triProjected.point2.x
-    triProjected.point3.x = triProjected.point3.x
-    
-    triProjected.point1.y = triProjected.point1.y
-    triProjected.point2.y = triProjected.point2.y
-    triProjected.point3.y = triProjected.point3.y
-    
-    triProjected.point1.z = triProjected.point1.z-2.5
-    triProjected.point2.z = triProjected.point2.z-2.5
-    triProjected.point3.z = triProjected.point3.z-2.5
-   
-   triProjected.point1 = multiplyVectorByMatrix(triProjected.point1,iprojectionMatrix)
-   triProjected.point2 = multiplyVectorByMatrix(triProjected.point2,iprojectionMatrix)
-   triProjected.point3 = multiplyVectorByMatrix(triProjected.point3,iprojectionMatrix)
-  
-  
-  
-triProjected.point1.x=triProjected.point1.x+1
-triProjected.point1.y=triProjected.point1.y+1
-
-triProjected.point2.x=triProjected.point2.x+1
-triProjected.point2.y=triProjected.point2.y+1
-
-triProjected.point3.x=triProjected.point3.x+1
-triProjected.point3.y=triProjected.point3.y+1
-  
-  
-triProjected.point1.x=triProjected.point1.x*(0.5*screenWidth)
-triProjected.point1.y=triProjected.point1.y*(0.5*screenHeight)
-
-triProjected.point2.x=triProjected.point2.x*(0.5*screenWidth)
-triProjected.point2.y=triProjected.point2.y*(0.5*screenHeight)
-
-triProjected.point3.x=triProjected.point3.x*(0.5*screenWidth)
-triProjected.point3.y=triProjected.point3.y*(0.5*screenHeight)
-
-
-    drawTriangle(triProjected)
- end
-  
-  --drawTriangle(tri1)
-  --drawMesh(cube)
+  drawMesh(modeljj)
 end
+
+
 
 
