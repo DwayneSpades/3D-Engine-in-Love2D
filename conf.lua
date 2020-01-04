@@ -4,7 +4,7 @@ function love.conf(t)
   t.window.height=600
   
   
-  
+  --t.window.depth=24
   t.identity = '3D Cube Demo'  
   
    

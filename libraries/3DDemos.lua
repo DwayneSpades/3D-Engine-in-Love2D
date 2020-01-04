@@ -24,7 +24,7 @@ function spinObjectDemo()
     axisToRot = math.random(1,4)
     autoRotActive=true
   end
-  autoRotActive=false
+ 
   if autoRotActive then
     if axisToRot==1 then
       thetaX=thetaX+accel

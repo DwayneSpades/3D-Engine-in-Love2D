@@ -3,7 +3,8 @@ require 'libraries/3DMath'
 require 'libraries/3DDemos'
 require 'libraries/3DDrawCalls'
 require 'libraries/objParser'
-require 'assets/model1'
+
+
 --Written by Preston Adams
 --steps to render 3d scene 
 
@@ -17,19 +18,6 @@ require 'assets/model1'
 
 function love.load()
   
-  camera = object:new
-  {
-    {0,0,0,0},
-    {0,1,0,0},
-    {0,0,-1,-1},
-    {0,0,0,1},
-    
-  }
-  
-  nPoint= object:new
-  {
-    0,0,0,1
-  }
   --a point in space
   point = object:new
   {
@@ -121,58 +109,21 @@ function love.load()
       {0,0,0,0}
   }
   
-  unitCube=mesh:new()
-  
-  cube = 
-    {
-      points={
-        {x=-1,y=-1,z=-1}, -- points
-        {x=-1,y=-1,z=1},
-        {x=1,y=-1,z=1},
-        {x=1,y=-1,z=-1},
-        {x=-1,y=1,z=-1},
-        {x=-1,y=1,z=1},
-        {x=1,y=1,z=1},
-        {x=1,y=1,z=-1}
-      },
-      edges={
-        {1,3},
-        {3,2},
-        {2,1},-- lines
-        {1,4},
-        {4,3},
-        {3,1},
-        {6,7},
-        {7,8},
-        {8,5},
-        {1,5},
-        {2,6},
-        {3,7},
-        {4,8}
-      }
-    }
-  --rtiangles from mesh
-  cube.tris={}
-
   cam = object:inherit{0,0,-2.5}
   scaler =100
   
-  tmp=matrix:new()
-  tmp2=matrix:new()
-  
-  tmp = setMatrix()
-  tmp2 = setMatrix()
-  
   iprojectionMatrix=projectionMatrix:new()
-  --iprojectionMatrix:setProjectionMatrix()
-  
-  setIdentityMatrix(tmp2)
-  
-  tmp = multiplyMatrices(tmp,tmp2)
   
   --Projection Matrix 
       screenWidth = 600
       screenHeight = 600
+      
+      --setting depth Buffer
+      depthBuffer={}
+      for i=1,(screenWidth*screenHeight) do
+        table.insert(depthBuffer,0)
+      end
+      
       local nearPlane= 0.1
       local farPlane = 1000
       local FOV = 90
@@ -186,138 +137,21 @@ function love.load()
       iprojectionMatrix[4][3]=-((-2*farPlane*nearPlane)/(farPlane-nearPlane))
       iprojectionMatrix[3][4]=-1
   
-  printMatrice(iprojectionMatrix)
+  local models={}
+  modelNumber=1
+  readObjFile('assets/deer.obj')
   
-  
-  
-  vect1 = vect3D:new()
-  vect2 = vect3D:new()
-  setVector(vect1,-9,8,0)
-  setVector(vect2,-559,191,550)
-  vect1 = subtractVectors(vect2,vect1)
-  vect1 = normalizeVector(vect1)
-  vect1 = flipVector(vect1)
-  printVector(vect1)
-  --printVector(vect2)
-
-  p6 = point:new()
-  
-  p7 = point:new()
-  p8 = point:new()
-  p9 = point:new()
-  p10 = point:new()
-  p11 = point:new()
-  p12 = point:new()
-  
-  p13 = point:new()
-  p14 = point:new()
-  p15 = point:new()
-  p16 = point:new()
-  p17 = point:new()
-  p18 = point:new()
-  
-  p19 = point:new()
-  p20 = point:new()
-  p21 = point:new()
-  p22 = point:new()
-  p23 = point:new()
-  p24 = point:new()
-  p25 = point:new()
-  p26 = point:new()
-  p27 = point:new()
-  p28 = point:new()
-  p29 = point:new()
-  p30 = point:new()
-  p31 = point:new()
-  p32 = point:new()
-  p33 = point:new()
-  p34 = point:new()
-  p35 = point:new()
-  p36 = point:new()
-  
-  
-  p1 = point:new{x=-1,y=-1,z=1}
-  p2 = point:new{x=-1,y=1,z=1}
-  p3 = point:new{x=1,y=1,z=1}
-  p4 = point:new{x=-1,y=-1,z=1}
-  p5 = point:new{x=1,y=1,z=1}
-  
-  p6:create(1,-1,1)
-  p7:create(1,-1,1)
-  p8:create(1,1,1)
-  p9:create(1,1,-1)
-  p10:create(1,-1,1)
-  p11:create(1,1,-1)
-  p12:create(1,-1,-1)
-  p13:create(1,-1,-1)
-  p14:create(1,1,-1)
-  p15:create(-1,1,-1)
-  p16:create(1,-1,-1)
-  p17:create(-1,1,-1)
-  p18:create(-1,-1,-1)
-  p19:create(-1,-1,-1)
-  p20:create(-1,1,1)
-  p21:create(-1,1,-1)
-  p22:create(-1,-1,-1)
-  p23:create(-1,-1,1)
-  p24:create(-1,1,1)
-  p25:create(-1,1,1)
-  p26:create(-1,1,-1)
-  p27:create(1,1,-1)
-  p28:create(-1,1,1)
-  p29:create(1,1,-1)
-  p30:create(1,1,1)
-  p31:create(-1,-1,1)
-  p32:create(-1,-1,-1)
-  p33:create(1,-1,-1)
-  p34:create(-1,-1,1)
-  p35:create(1,-1,-1)
-  p36:create(1,-1,1)
-  
-  tri1 = triangle:new()
-  tri2 = triangle:new()
-  tri3 = triangle:new()
-  tri4 = triangle:new()
-  tri5 = triangle:new()
-  tri6 = triangle:new()
-  tri7 = triangle:new()
-  tri8 = triangle:new()
-  tri9 = triangle:new()
-  tri10 = triangle:new()
-  tri11 = triangle:new()
-  tri12 = triangle:new()
-  
-  tri1:create(p1,p2,p3)
-  tri2:create(p4,p5,p6)
-  tri3:create(p7,p8,p9)
-  tri4:create(p10,p11,p12)
-  tri5:create(p13,p14,p15)
-  tri6:create(p16,p17,p18)
-  tri7:create(p19,p20,p21)
-  tri8:create(p22,p23,p24)
-  tri9:create(p25,p26,p27)
-  tri10:create(p28,p29,p30)
-  tri11:create(p31,p32,p33)
-  tri12:create(p34,p35,p36)
-  
-  
-  triTranslated = triangle:new()
-  
-  pp = point:new()
-  pp:create(0,0,0)
-  
-  triTranslated:create(p1,p2,p3)
-  
+  recursiveEnumerate('importedModels',models)
+  requireFiles(models)
   
   makeObject()
   
-  model5 = {tri1,tri2,tri3,tri4,tri5,tri6,tri7,tri8,tri9,tri10,tri11,tri12}
   speed = 5.05
-  Zpos = 25.5
+  Zpos = 2.5
   Ypos = 0
   Xpos = 0
-  origin = {tri1,tri2,tri3,tri4,tri5,tri6,tri7,tri8,tri9,tri10,tri11,tri12}
   
+  constructMesh(model)
   
   timeLimit =200
   rotTimer = timeLimit
@@ -328,7 +162,7 @@ function love.load()
   
   love.window.setTitle('3D Cube Demo')
   --tri1={point1=p1,point2=p2,point3=p3}
- --readObjFile('assets/deer.obj')
+ 
 end
 
 function drawObject(Mesh)
@@ -407,14 +241,50 @@ function love.keypressed(key)
 end
 
 function love.draw()
+  drawMesh(model)
+  
+  love.graphics.print('FPS:'..love.timer.getFPS(),0,400)
   love.graphics.print("Press and hold the arrow keys to rotate manually.",0,0,0,2,2)
   love.graphics.print("auto rotation turns on if no valid keys are pressed",0,32,0,1,1)
   love.graphics.print("press escape to close program.",0,560,0,2,2)
   love.graphics.print("Written by Preston Adams",380,580,0,1,1)
   
-  drawMesh(modeljj)
+end
+
+function requireFiles(files)
+
+    for _, filed in ipairs(files) do
+
+        local filed = filed:sub(1, -5)
+
+        require(filed)
+
+    end
+
 end
 
 
+
+function recursiveEnumerate(folder, file_list)
+
+    local items = love.filesystem.getDirectoryItems(folder)
+
+    for _, item in ipairs(items) do
+
+        local file = folder .. '/' .. item
+
+        if love.filesystem.getInfo(file) then
+
+            table.insert(file_list, file)
+
+        elseif love.filesystem.isDirectory(file) then
+
+            recursiveEnumerate(file, file_list)
+
+        end
+
+    end
+
+end
 
 

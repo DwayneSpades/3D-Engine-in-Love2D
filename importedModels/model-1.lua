@@ -2280,7 +2280,7 @@ f1 = triangle:new{ point1=p530, point2=p61, point3=p537}
  f1506 = triangle:new{ point1=p207, point2=p365, point3=p270}
  f1507 = triangle:new{ point1=p567, point2=p563, point3=p562}
  f1508 = triangle:new{ point1=p618, point2=p259, point3=p557}
- modeljj={f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20,
+ model={f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20,
 f21,f22,f23,f24,f25,f26,f27,f28,f29,f30,f31,f32,f33,f34,f35,f36,f37,f38,f39,f40,
 f41,f42,f43,f44,f45,f46,f47,f48,f49,f50,f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,
 f61,f62,f63,f64,f65,f66,f67,f68,f69,f70,f71,f72,f73,f74,f75,f76,f77,f78,f79,f80,

@@ -1,7 +1,8 @@
 --.OBJ file parser
 function readObjFile(file)
   inn = assert(io.input(file,"r+"))
-  out = assert(io.output("assets/model1.lua","w"))
+  out = assert(io.output("importedModels/model-"..modelNumber..".lua","w"))
+  modelNumber=modelNumber+1
   
   local pointOrder=1
   local triOrder=1
@@ -20,14 +21,21 @@ function readObjFile(file)
     if line:find(verticePattern) then
       line = line:gsub(verticePattern,'p'..pointOrder..' = point:new{ x=%1, y=%2, z=%3}\n')
       out:write(line)
-      print(line)
+      --print(line)
       pointOrder=pointOrder+1
+    end
+    
+    if line:find(facePattern1) then
+      line = line:gsub(facePattern1,'f'..triOrder..' = triangle:new{ point1=p%1, point2=p%2, point3=p%3}\n')
+      out:write(line)
+      --print(line)
+      triOrder=triOrder+1
     end
     
     if line:find(facePattern2) then
       line = line:gsub(facePattern2,'f'..triOrder..' = triangle:new{ point1=p%1, point2=p%2, point3=p%3}\n')
       out:write(line)
-      print(line)
+      --print(line)
       triOrder=triOrder+1
     end
     

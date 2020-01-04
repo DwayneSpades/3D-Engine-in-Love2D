@@ -45,7 +45,7 @@ function multiplyMatrices(mat1,mat2)
   res = matrix:new()
   res = setZeroMatrix()
 
-  print('multiplying:')
+  --print('multiplying:')
   
   --row 1
   res[1][1]= mat1[1][1] * mat2[1][1] + mat1[2][1] * mat2[1][2] + mat1[3][1] * mat2[1][3] + mat1[4][1] * mat2[1][4]
