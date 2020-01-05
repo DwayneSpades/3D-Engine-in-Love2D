@@ -70,13 +70,14 @@ function love.load()
     {0,0,0,0}
   }
   
-  thetaX = 0.000
-  thetaY = 0.000
-  thetaZ = 0.000
-  accel = 0.0002
-  drag=0.0001
-  rSpeed = 0
-
+  thetaX = 0
+  thetaY = 0
+  thetaZ = 0
+  accel = 0.0008
+  drag = 0.00025
+  rSpeedX = 0
+  rSpeedY = 0
+  
   rotationMatrixX = matrix:new
   {
       {1,0,0,0},
@@ -91,6 +92,8 @@ function love.load()
       {0,1,0,0},
       {-math.sin(thetaY),0,math.cos(thetaY),0},
       {0,0,0,1}
+      
+      
   }
   
   rotationMatrixZ = matrix:new
@@ -115,18 +118,18 @@ function love.load()
   iprojectionMatrix=projectionMatrix:new()
   
   --Projection Matrix 
-      screenWidth = 600
-      screenHeight = 600
+      screenWidth = love.graphics.getWidth()
+      screenHeight = love.graphics.getHeight()
       
-      --setting depth Buffer
+      --[[setting depth Buffer
       depthBuffer={}
       for i=1,(screenWidth*screenHeight) do
         table.insert(depthBuffer,0)
       end
-      
+      ]]
       local nearPlane= 0.1
-      local farPlane = 1000
-      local FOV = 90
+      local farPlane = 1
+      local FOV = 90 --90 for square screen --60 for widescreen
         
       local a = screenWidth/screenHeight
       local d = 1/math.tan(FOV *0.5 / 180 * 3.1415926535)
@@ -146,24 +149,39 @@ function love.load()
   
   makeObject()
   
-  speed = 5.05
-  Zpos = 2.5
+  speed = 10.05
+  Zpos = 0
   Ypos = 0
   Xpos = 0
   
   constructMesh(model)
   
-  timeLimit =200
+  timeLimit =10000
   rotTimer = timeLimit
   rotTimer2 = timeLimit
   
   autoRotActive=true
   axisToRot =1
   
+  worldMatrix = matrix:new
+  {
+    {1,0,0,0},
+    {0,1,0,0},
+    {0,0,1,0},
+    {0,0,0,1}
+  }
+  
+   
+  scaleScreenX = 0.5*screenWidth
+  scaleScreenY = 0.5*screenHeight
+  scaleMatrix = point:new{x=scaleScreenX,y=scaleScreenY,z=1}
+  normMatrix = point:new{x=1,y=1,z=0}
+ 
   love.window.setTitle('3D Cube Demo')
   --tri1={point1=p1,point2=p2,point3=p3}
  
 end
+
 
 function drawObject(Mesh)
   for i,v in ipairs(mesh[2]) do
@@ -243,7 +261,7 @@ end
 function love.draw()
   drawMesh(model)
   
-  love.graphics.print('FPS:'..love.timer.getFPS(),0,400)
+  love.graphics.print('FPS:'..love.timer.getFPS(),0,50)
   love.graphics.print("Press and hold the arrow keys to rotate manually.",0,0,0,2,2)
   love.graphics.print("auto rotation turns on if no valid keys are pressed",0,32,0,1,1)
   love.graphics.print("press escape to close program.",0,560,0,2,2)

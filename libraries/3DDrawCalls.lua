@@ -5,92 +5,59 @@ function drawTriangle(tri)
     tri.point1.x,tri.point1.y,
     tri.point2.x,tri.point2.y,
     tri.point3.x,tri.point3.y)
-  
+  --[[
   love.graphics.line(tri.point1.x,tri.point1.y,tri.point2.x,tri.point2.y)
   love.graphics.line(tri.point2.x,tri.point2.y,tri.point3.x,tri.point3.y)
   love.graphics.line(tri.point3.x,tri.point3.y,tri.point1.x,tri.point1.y)
+  ]]
 end
 
 function drawMesh(mesh)
 
   local verts = {}
-  rotationMatrix = multiplyMatrices(rotationMatrixX,rotationMatrixY)
+  local vv={}
+  local worldMatrix = multiplyMatrices(rotationMatrixY,rotationMatrixX)
+  local translationMatrix = matrix:new
+  {
+    {1,0,0,Xpos},
+    {0,1,0,Ypos},
+    {0,0,1,Zpos},
+    {0,0,0,1}
+  }
+
+  --point:new{x=-Xpos,y=-Ypos,z=-Zpos}
+  
+   worldMatrix = multiplyMatrices(worldMatrix,translationMatrix)
+   --worldMatrix = multiplyMatrices(worldMatrix,iprojectionMatrix)
    for i,v in ipairs(mesh) do
-     if i <1300 then
-    local triProjected = triangle:new()
-   
     
-    v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrix)
-    v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrix)
-    v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrix)
-    --[[
-    v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixX)
-    v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixX)
-    v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixX)
-    
-    v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixY)
-    v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixY)
-    v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixY)
-    ]]
-    
-   --can't rotate on 3-axis because of gymbol lock
-   -- v.point1 = multiplyVectorByMatrix(v.point1,rotationMatrixZ)
-   -- v.point2 = multiplyVectorByMatrix(v.point2,rotationMatrixZ)
-   -- v.point3 = multiplyVectorByMatrix(v.point3,rotationMatrixZ)
-    
-    triProjected.point1 = multiplyVectorByMatrix(v.point1,rotationMatrix)
-    triProjected.point2 = multiplyVectorByMatrix(v.point2,rotationMatrix)
-    triProjected.point3 = multiplyVectorByMatrix(v.point3,rotationMatrix)
-    
-    triProjected.point1.x = triProjected.point1.x-Xpos
-    triProjected.point2.x = triProjected.point2.x-Xpos
-    triProjected.point3.x = triProjected.point3.x-Xpos
-    
-    triProjected.point1.y = triProjected.point1.y-Ypos
-    triProjected.point2.y = triProjected.point2.y-Ypos
-    triProjected.point3.y = triProjected.point3.y-Ypos
-    
-    triProjected.point1.z = triProjected.point1.z-Zpos
-    triProjected.point2.z = triProjected.point2.z-Zpos
-    triProjected.point3.z = triProjected.point3.z-Zpos
-    
-    local depthX = (triProjected.point1.x + triProjected.point2.x + triProjected.point3.x)/3
-    local depthY = (triProjected.point1.y + triProjected.point2.y + triProjected.point3.y)/3
-    
-    triProjected.point1 = multiplyVectorByMatrix(triProjected.point1,iprojectionMatrix)
-    triProjected.point2 = multiplyVectorByMatrix(triProjected.point2,iprojectionMatrix)
-    triProjected.point3 = multiplyVectorByMatrix(triProjected.point3,iprojectionMatrix)
-      
-    triProjected.point1.x=triProjected.point1.x+1
-    triProjected.point1.y=triProjected.point1.y+1
-
-    triProjected.point2.x=triProjected.point2.x+1
-    triProjected.point2.y=triProjected.point2.y+1
-
-    triProjected.point3.x=triProjected.point3.x+1
-    triProjected.point3.y=triProjected.point3.y+1
+    local triProjected = triangle:new{
   
-  
-    triProjected.point1.x=triProjected.point1.x*(0.5*screenWidth)
-    triProjected.point1.y=triProjected.point1.y*(0.5*screenHeight)
-
-    triProjected.point2.x=triProjected.point2.x*(0.5*screenWidth)
-    triProjected.point2.y=triProjected.point2.y*(0.5*screenHeight)
-
-    triProjected.point3.x=triProjected.point3.x*(0.5*screenWidth)
-    triProjected.point3.y=triProjected.point3.y*(0.5*screenHeight)
+    point1 = multiplyVectorByMatrix(v.point1,worldMatrix),--v.point1
+    point2 = multiplyVectorByMatrix(v.point2,worldMatrix),--v.point2
+    point3 = multiplyVectorByMatrix(v.point3,worldMatrix)--v.point3
+  }
+ 
+    triProjected.point1 = multiplyVectorByMatrixP(triProjected.point1,iprojectionMatrix)
+    triProjected.point2 = multiplyVectorByMatrixP(triProjected.point2,iprojectionMatrix)
+    triProjected.point3 = multiplyVectorByMatrixP(triProjected.point3,iprojectionMatrix)
+     
+    triProjected.point1 = addVectors(triProjected.point1,normMatrix)
+    triProjected.point2 = addVectors(triProjected.point2,normMatrix)
+    triProjected.point3 = addVectors(triProjected.point3,normMatrix)
+    
+    triProjected.point1 = multiplyVectors(triProjected.point1,scaleMatrix)
+    triProjected.point2 = multiplyVectors(triProjected.point2,scaleMatrix)
+    triProjected.point3 = multiplyVectors(triProjected.point3,scaleMatrix)
     
     table.insert(verts,triProjected)
-    end
-  --wire frame mode
-    --drawTriangle(triProjected)
-end
     
-  
+  --wire frame mode
+  --drawTriangle(triProjected)
+end
+
   table.sort(verts,sortDepth)
-  
-  local vv={}
-  
+
   for i,v in ipairs(verts) do
    
     table.insert(vv,{v.point1.x,v.point1.y,0,0,1,0,0,1})
@@ -100,6 +67,7 @@ end
   end
   
   finalMesh:setVertices(vv,1)
+  
   love.graphics.draw(finalMesh,0,0)
 end
 
@@ -107,14 +75,12 @@ function sortDepth(a,b)
   local depth1 = (a.point1.z + a.point2.z + a.point3.z)/3
   local depth2 = (b.point1.z + b.point2.z + b.point3.z)/3
   
-  if (depth1<depth2) then
-    return true
-  end
-  return false
+  return(depth1<depth2) 
 end
 
 function constructMesh(mesh)
-
+  
+  
   love.graphics.setFrontFaceWinding('cw')
   love.graphics.setMeshCullMode('back')
   
