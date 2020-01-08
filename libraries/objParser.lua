@@ -1,8 +1,8 @@
 --.OBJ file parser
 function readObjFile(file)
-  inn = assert(io.input(file,"r+"))
-  out = assert(io.output("importedModels/model-"..modelNumber..".lua","w"))
-  modelNumber=modelNumber+1
+  io.input(file,"r+")
+
+  
   
   local pointOrder=1
   local triOrder=1
@@ -12,63 +12,63 @@ function readObjFile(file)
   local verticePattern = '^v (%S+) (%S+) (%S+)'
   local facePattern1 = '^f (%d+) (%d+) (%d+)'
   local facePattern2 = '^f (%d+)/%d+ (%d+)/%d+ (%d+)/%d+'
+  local bufferOrder = 1
+  local pointsBuffer ={}
+  local pointList={}
+  local triList={}
   
-  out:write("function makeObject()\n\n")
+  table.insert(models,mesh:new())
+  modelNumber=modelNumber+1
   
   for line in io.lines(file) do
 
     --print(line)
     if line:find(verticePattern) then
-      line = line:gsub(verticePattern,'p'..pointOrder..' = point:new{ x=%1, y=%2, z=%3}\n')
-      out:write(line)
-      --print(line)
-      pointOrder=pointOrder+1
+      local x2,y2,z2 = 
+      line:gsub(verticePattern,'%1'),
+      line:gsub(verticePattern,'%2'),
+      line:gsub(verticePattern,'%3')
+      x2=tonumber(x2)
+      y2=tonumber(y2)
+      z2=tonumber(z2)
+      
+      table.insert(pointList,point:new{x=x2,y=y2,z=z2})
     end
     
     if line:find(facePattern1) then
-      line = line:gsub(facePattern1,'f'..triOrder..' = triangle:new{ point1=p%1, point2=p%2, point3=p%3}\n')
-      out:write(line)
-      --print(line)
-      triOrder=triOrder+1
+      local point11,point22,point33 = 
+      line:gsub(facePattern1,'%1'),
+      line:gsub(facePattern1,'%2'),
+      line:gsub(facePattern1,'%3')
+      point11=tonumber(point11)
+      point22=tonumber(point22)
+      point33=tonumber(point33)
+      table.insert(triList, triangle:new{
+          point1=pointList[point11],
+          point2=pointList[point22],
+          point3=pointList[point33]})
+     
     end
     
     if line:find(facePattern2) then
-      line = line:gsub(facePattern2,'f'..triOrder..' = triangle:new{ point1=p%1, point2=p%2, point3=p%3}\n')
-      out:write(line)
-      --print(line)
-      triOrder=triOrder+1
+      local point11,point22,point33 = 
+      line:gsub(facePattern2,'%1'),
+      line:gsub(facePattern2,'%2'),
+      line:gsub(facePattern2,'%3')
+      point11=tonumber(point11)
+      point22=tonumber(point22)
+      point33=tonumber(point33)
+      table.insert(triList, triangle:new{
+          point1=pointList[point11],
+          point2=pointList[point22],
+          point3=pointList[point33]})
+     
     end
     
-    if(string.find(line,'v'))then
-      num=io.read("*number")
-      --print('found vertex')
-    end
-  
-    if(string.find(line,'f'))then
-      --print ('found face')
-    end
-
-    lineNum = lineNum+1
 end
-out:write('model={')
-  
-  for i=1 , triOrder do
-    if(i==triOrder-1)then
-      out:write('f'..i..'}')
-      break
-    end
-    
-    out:write('f'..i..',')
-    if(i%20==0)then
-      out:write('\n')
-    end
-    
-  end
-  
-  out:write("\n\nend")
+models[modelNumber].tris=triList
 
-out:flush()
-out:close()
+
 
 
 end

@@ -47,10 +47,7 @@ function love.load()
     end
   }
   
-  mesh = object:new
-  {
-    tris={},
-  }
+  
   
   --a vector
   vect3D = object:new
@@ -70,39 +67,6 @@ function love.load()
     {0,0,0,0}
   }
   
-  thetaX = 0
-  thetaY = 0
-  thetaZ = 0
-  accel = 0.0008
-  drag = 0.00025
-  rSpeedX = 0
-  rSpeedY = 0
-  
-  rotationMatrixX = matrix:new
-  {
-      {1,0,0,0},
-      {0,math.cos(thetaX),-math.sin(thetaX),0},
-      {0,math.sin(thetaX),math.cos(thetaX),0},
-      {0,0,0,1}
-  }
-  
-  rotationMatrixY = matrix:new
-  {
-      {math.cos(thetaY),0,math.sin(thetaY),0},
-      {0,1,0,0},
-      {-math.sin(thetaY),0,math.cos(thetaY),0},
-      {0,0,0,1}
-      
-      
-  }
-  
-  rotationMatrixZ = matrix:new
-  {
-      {math.cos(thetaZ),-math.sin(thetaZ),0,0},
-      {math.sin(thetaZ),math.cos(thetaZ),0,0},
-      {0,0,1,0},
-      {0,0,0,1}
-  }
   
   projectionMatrix = matrix:new
   {
@@ -112,6 +76,31 @@ function love.load()
       {0,0,0,0}
   }
   
+  mesh = object:new
+  {
+    transform={},
+    points={},
+    tris={},
+    geomtry = 0,
+    
+    rSpeedX = 0,
+    rSpeedY = 0,
+  
+    thetaX = 113,
+    thetaY = 0,
+    thetaZ = 0,
+
+    speed = 0.5,
+  
+    Xpos = 0,
+    Ypos = 0,
+    Zpos = -100,
+  
+    accel = 0.0008,
+    drag = 0.00025,
+    
+  }
+
   cam = object:inherit{0,0,-2.5}
   scaler =100
   
@@ -120,15 +109,9 @@ function love.load()
   --Projection Matrix 
       screenWidth = love.graphics.getWidth()
       screenHeight = love.graphics.getHeight()
-      
-      --[[setting depth Buffer
-      depthBuffer={}
-      for i=1,(screenWidth*screenHeight) do
-        table.insert(depthBuffer,0)
-      end
-      ]]
+
       local nearPlane= 0.1
-      local farPlane = 1
+      local farPlane = 1000
       local FOV = 90 --90 for square screen --60 for widescreen
         
       local a = screenWidth/screenHeight
@@ -140,21 +123,32 @@ function love.load()
       iprojectionMatrix[4][3]=-((-2*farPlane*nearPlane)/(farPlane-nearPlane))
       iprojectionMatrix[3][4]=-1
   
-  local models={}
-  modelNumber=1
-  readObjFile('assets/deer.obj')
+  local imports={}
+  models = {}
   
-  recursiveEnumerate('importedModels',models)
-  requireFiles(models)
+  modelNumber=0
   
-  makeObject()
+    for i=1,183 do
+      readObjFile('assets/test.obj')
+    end
+    
+  for i,v in ipairs(models) do
+    constructMesh(v)
+  end
+  spacing=0
+  downing=0
+  for i,v in ipairs(models) do
+    v.Xpos = (spacing*3)-15
+    v.Ypos = (downing*3)-15
+    downing=downing+1
+    if (i%20==0)then
+      spacing=spacing+1
+      downing=0
+    end
+    
+  end
   
-  speed = 10.05
-  Zpos = 0
-  Ypos = 0
-  Xpos = 0
   
-  constructMesh(model)
   
   timeLimit =10000
   rotTimer = timeLimit
@@ -162,15 +156,6 @@ function love.load()
   
   autoRotActive=true
   axisToRot =1
-  
-  worldMatrix = matrix:new
-  {
-    {1,0,0,0},
-    {0,1,0,0},
-    {0,0,1,0},
-    {0,0,0,1}
-  }
-  
    
   scaleScreenX = 0.5*screenWidth
   scaleScreenY = 0.5*screenHeight
@@ -178,16 +163,15 @@ function love.load()
   normMatrix = point:new{x=1,y=1,z=0}
  
   love.window.setTitle('3D Cube Demo')
+  love.graphics.setFrontFaceWinding('cw')
+  love.graphics.setMeshCullMode('back')
+  
+  
   --tri1={point1=p1,point2=p2,point3=p3}
  
 end
 
 
-function drawObject(Mesh)
-  for i,v in ipairs(mesh[2]) do
-    
-  end
-end
 
 function drawLine(p1,p2)
   x0, y0 = project(p1) -- get the 2d location of the 3d points...
@@ -249,7 +233,7 @@ function setMatrix()
 end
 
 function love.update()
-  spinObjectDemo()
+  spinObjectDemo(models[1])
 end
 
 function love.keypressed(key)
@@ -259,7 +243,10 @@ function love.keypressed(key)
 end
 
 function love.draw()
-  drawMesh(model)
+  
+  for i,v in ipairs(models) do
+    drawMesh(v)
+  end
   
   love.graphics.print('FPS:'..love.timer.getFPS(),0,50)
   love.graphics.print("Press and hold the arrow keys to rotate manually.",0,0,0,2,2)

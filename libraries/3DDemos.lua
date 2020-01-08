@@ -1,28 +1,28 @@
 --demo update code
 
-function spinObjectDemo()
+function spinObjectDemo(mesh)
   
   
-  if rSpeedX>0 then
-    rSpeedX=rSpeedX-drag
+  if mesh.rSpeedX>0 then
+    mesh.rSpeedX=mesh.rSpeedX-mesh.drag
     
-  elseif rSpeedX<0 then
-    rSpeedX=rSpeedX+drag
+  elseif mesh.rSpeedX<0 then
+    mesh.rSpeedX=mesh.rSpeedX+mesh.drag
   
   end
   
-  if rSpeedY>0 then
-    rSpeedY=rSpeedY-drag
-  elseif rSpeedY<0 then
-    rSpeedY=rSpeedY+drag
+  if mesh.rSpeedY>0 then
+    mesh.rSpeedY=mesh.rSpeedY-mesh.drag
+  elseif mesh.rSpeedY<0 then
+    mesh.rSpeedY=mesh.rSpeedY+mesh.drag
 
   end
   
 
-  thetaX=thetaX+rSpeedX
-  thetaY=thetaY+rSpeedY
+  mesh.thetaX=mesh.thetaX+mesh.rSpeedX
+  mesh.thetaY=mesh.thetaY+mesh.rSpeedY
   
-
+--[[
   rotTimer=rotTimer-1
   
   if (rotTimer<=0) then
@@ -44,74 +44,54 @@ function spinObjectDemo()
     end
     
   end
-  
+  ]]
   
   if love.keyboard.isDown('up') then
-    autoRotActive=false
-    rotTimer=timeLimit
-    rSpeedX=rSpeedX-accel
+    --autoRotActive=false
+    --rotTimer=timeLimit
+    mesh.rSpeedX=mesh.rSpeedX-mesh.accel
   
   elseif love.keyboard.isDown('down') then
-    autoRotActive=false
-    rotTimer=timeLimit
-    rSpeedX=rSpeedX+accel
+    --autoRotActive=false
+   -- rotTimer=timeLimit
+    mesh.rSpeedX=mesh.rSpeedX+mesh.accel
   end
   if love.keyboard.isDown('left') then
-    autoRotActive=false
-    rotTimer=timeLimit
-    rSpeedY=rSpeedY+accel
+    --autoRotActive=false
+    --rotTimer=timeLimit
+    mesh.rSpeedY=mesh.rSpeedY+mesh.accel
   
   elseif love.keyboard.isDown('right') then
-    autoRotActive=false
-    rotTimer=timeLimit
-    rSpeedY=rSpeedY-accel
+    --autoRotActive=false
+    --rotTimer=timeLimit
+    mesh.rSpeedY=mesh.rSpeedY-mesh.accel
   end
   
   --WASD controls for 3d Object
   if love.keyboard.isDown('w') then
     
-    Zpos = Zpos - speed
+    mesh.Zpos = mesh.Zpos - mesh.speed
   end
   if love.keyboard.isDown('s') then
     
-    Zpos = Zpos + speed
+    mesh.Zpos = mesh.Zpos + mesh.speed
   end
   if love.keyboard.isDown('a') then
     
-    Xpos = Xpos + speed
+    mesh.Xpos = mesh.Xpos + mesh.speed
   end
   if love.keyboard.isDown('d') then
     
-    Xpos = Xpos - speed
+    mesh.Xpos = mesh.Xpos - mesh.speed
   end
   
   if love.keyboard.isDown('q') then
     
-    Ypos = Ypos - speed
+    mesh.Ypos = mesh.Ypos - mesh.speed
   end
   if love.keyboard.isDown('e') then
     
-    Ypos = Ypos + speed
+    mesh.Ypos = mesh.Ypos + mesh.speed
   end
   
-  
-  
-  rotationMatrixX = matrix:new
-  {
-      {1,0,0,0},
-      {0,math.cos(thetaX),-math.sin(thetaX),0},
-      {0,math.sin(thetaX),math.cos(thetaX),0},
-      {0,0,0,1}
-  }
-  
-  rotationMatrixY = matrix:new
-  {
-      {math.cos(thetaY),0,math.sin(thetaY),0},
-      {0,1,0,0},
-      {-math.sin(thetaY),0,math.cos(thetaY),0},
-      {0,0,0,1}
-  }
-  
-  
-
 end

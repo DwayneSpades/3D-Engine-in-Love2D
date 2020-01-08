@@ -13,31 +13,44 @@ function drawTriangle(tri)
 end
 
 function drawMesh(mesh)
-
-  local verts = {}
-  local vv={}
-  local worldMatrix = multiplyMatrices(rotationMatrixY,rotationMatrixX)
+  
+  local rotationMatrixX = matrix:new
+  {
+      {1,0,0,0},
+      {0,math.cos(mesh.thetaX),-math.sin(mesh.thetaX),0},
+      {0,math.sin(mesh.thetaX),math.cos(mesh.thetaX),0},
+      {0,0,0,1}
+  }
+  
+  local rotationMatrixY = matrix:new
+  {
+      {math.cos(mesh.thetaY),0,math.sin(mesh.thetaY),0},
+      {0,1,0,0},
+      {-math.sin(mesh.thetaY),0,math.cos(mesh.thetaY),0},
+      {0,0,0,1}
+  }
+  
   local translationMatrix = matrix:new
   {
-    {1,0,0,Xpos},
-    {0,1,0,Ypos},
-    {0,0,1,Zpos},
+    {1,0,0,mesh.Xpos},
+    {0,1,0,mesh.Ypos},
+    {0,0,1,mesh.Zpos},
     {0,0,0,1}
   }
-
-  --point:new{x=-Xpos,y=-Ypos,z=-Zpos}
   
-   worldMatrix = multiplyMatrices(worldMatrix,translationMatrix)
-   --worldMatrix = multiplyMatrices(worldMatrix,iprojectionMatrix)
-   for i,v in ipairs(mesh) do
-    
-    local triProjected = triangle:new{
-  
-    point1 = multiplyVectorByMatrix(v.point1,worldMatrix),--v.point1
-    point2 = multiplyVectorByMatrix(v.point2,worldMatrix),--v.point2
-    point3 = multiplyVectorByMatrix(v.point3,worldMatrix)--v.point3
-  }
+  local verts = {}
  
+  local worldMatrix = multiplyMatrices(rotationMatrixY,rotationMatrixX)
+
+  worldMatrix = multiplyMatrices(worldMatrix,translationMatrix)
+
+  for i,v in ipairs(mesh.tris) do
+    local triProjected = triangle:new()
+    
+    triProjected.point1 = multiplyVectorByMatrix(v.point1,worldMatrix)
+    triProjected.point2 = multiplyVectorByMatrix(v.point2,worldMatrix)
+    triProjected.point3 = multiplyVectorByMatrix(v.point3,worldMatrix)  
+    
     triProjected.point1 = multiplyVectorByMatrixP(triProjected.point1,iprojectionMatrix)
     triProjected.point2 = multiplyVectorByMatrixP(triProjected.point2,iprojectionMatrix)
     triProjected.point3 = multiplyVectorByMatrixP(triProjected.point3,iprojectionMatrix)
@@ -57,18 +70,20 @@ function drawMesh(mesh)
 end
 
   table.sort(verts,sortDepth)
-
+   
+  local vv={}
+  
   for i,v in ipairs(verts) do
    
     table.insert(vv,{v.point1.x,v.point1.y,0,0,1,0,0,1})
-    table.insert(vv,{v.point2.x,v.point2.y,0,1,1,0,0,1})
-    table.insert(vv,{v.point3.x,v.point3.y,1,1,1,1,1,1})
+    table.insert(vv,{v.point2.x,v.point2.y,0,0,0,1,0,1})
+    table.insert(vv,{v.point3.x,v.point3.y,1,1,0,1,1,1})
     
   end
   
-  finalMesh:setVertices(vv,1)
+  mesh.geometry:setVertices(vv,1)
   
-  love.graphics.draw(finalMesh,0,0)
+  love.graphics.draw(mesh.geometry,0,0)
 end
 
 function sortDepth(a,b)
@@ -80,24 +95,19 @@ end
 
 function constructMesh(mesh)
   
-  
-  love.graphics.setFrontFaceWinding('cw')
-  love.graphics.setMeshCullMode('back')
-  
   local verts={}
   local index={}
   local num=1
   
-   for i,v in ipairs(mesh) do
+   for i,v in ipairs(mesh.tris) do
     table.insert(verts,{v.point1.x,v.point1.y,0,0,0,0,0,0})
     table.insert(verts,{v.point2.x,v.point2.y,0,0,0,0,0,0})
     table.insert(verts,{v.point3.x,v.point3.y,0,0,0,0,0,0})
   end
   
-  finalMesh = love.graphics.newMesh(verts,'triangles')
-  image=love.graphics.newImage('skin.jpg')
-  finalMesh:setTexture(image)
-
+  mesh.geometry = love.graphics.newMesh(verts,'triangles') 
+  --local image=love.graphics.newImage("skin.jpg")
+  mesh.geometry:setTexture(image)
 end
 
 function rotateShape(model)
