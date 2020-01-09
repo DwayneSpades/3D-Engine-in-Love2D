@@ -75,9 +75,9 @@ end
   
   for i,v in ipairs(verts) do
    
-    table.insert(vv,{v.point1.x,v.point1.y,0,0,1,0,0,1})
-    table.insert(vv,{v.point2.x,v.point2.y,0,0,0,1,0,1})
-    table.insert(vv,{v.point3.x,v.point3.y,1,1,0,1,1,1})
+    table.insert(vv,{v.point1.x,v.point1.y,0,1,1,1,1,1})
+    table.insert(vv,{v.point2.x,v.point2.y,1,0,1,1,1,1})
+    table.insert(vv,{v.point3.x,v.point3.y,1,1,1,1,1,1})
     
   end
   
@@ -106,7 +106,7 @@ function constructMesh(mesh)
   end
   
   mesh.geometry = love.graphics.newMesh(verts,'triangles') 
-  --local image=love.graphics.newImage("skin.jpg")
+  local image=love.graphics.newImage("skin.jpg")
   mesh.geometry:setTexture(image)
 end
 

@@ -81,6 +81,7 @@ function love.load()
     transform={},
     points={},
     tris={},
+    uvCoords={},
     geomtry = 0,
     
     rSpeedX = 0,
@@ -90,11 +91,11 @@ function love.load()
     thetaY = 0,
     thetaZ = 0,
 
-    speed = 0.5,
+    speed = 10.5,
   
     Xpos = 0,
     Ypos = 0,
-    Zpos = -100,
+    Zpos = -200,
   
     accel = 0.0008,
     drag = 0.00025,
@@ -128,8 +129,8 @@ function love.load()
   
   modelNumber=0
   
-    for i=1,183 do
-      readObjFile('assets/test.obj')
+    for i=1,300 do
+      readObjFile('assets/Gull.obj')
     end
     
   for i,v in ipairs(models) do
@@ -138,8 +139,8 @@ function love.load()
   spacing=0
   downing=0
   for i,v in ipairs(models) do
-    v.Xpos = (spacing*3)-15
-    v.Ypos = (downing*3)-15
+    v.Xpos = (spacing*85)-15
+    v.Ypos = (downing*8)-15
     downing=downing+1
     if (i%20==0)then
       spacing=spacing+1

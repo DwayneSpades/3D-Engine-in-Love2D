@@ -10,6 +10,7 @@ function readObjFile(file)
   local lineNum=1
   
   local verticePattern = '^v (%S+) (%S+) (%S+)'
+  local verticePattern = '^vt (%S+) (%S+) (%S+)'
   local facePattern1 = '^f (%d+) (%d+) (%d+)'
   local facePattern2 = '^f (%d+)/%d+ (%d+)/%d+ (%d+)/%d+'
   local bufferOrder = 1
