@@ -1,15 +1,12 @@
 --3D draw functions
 
 function drawTriangle(tri)
-  love.graphics.polygon('fill',
-    tri.point1.x,tri.point1.y,
-    tri.point2.x,tri.point2.y,
-    tri.point3.x,tri.point3.y)
-  --[[
+  
+
   love.graphics.line(tri.point1.x,tri.point1.y,tri.point2.x,tri.point2.y)
   love.graphics.line(tri.point2.x,tri.point2.y,tri.point3.x,tri.point3.y)
   love.graphics.line(tri.point3.x,tri.point3.y,tri.point1.x,tri.point1.y)
-  ]]
+  
 end
 
 function drawMesh(mesh)
@@ -54,7 +51,7 @@ function drawMesh(mesh)
     triProjected.point1 = multiplyVectorByMatrixP(triProjected.point1,iprojectionMatrix)
     triProjected.point2 = multiplyVectorByMatrixP(triProjected.point2,iprojectionMatrix)
     triProjected.point3 = multiplyVectorByMatrixP(triProjected.point3,iprojectionMatrix)
-     
+      
     triProjected.point1 = addVectors(triProjected.point1,normMatrix)
     triProjected.point2 = addVectors(triProjected.point2,normMatrix)
     triProjected.point3 = addVectors(triProjected.point3,normMatrix)
@@ -62,23 +59,23 @@ function drawMesh(mesh)
     triProjected.point1 = multiplyVectors(triProjected.point1,scaleMatrix)
     triProjected.point2 = multiplyVectors(triProjected.point2,scaleMatrix)
     triProjected.point3 = multiplyVectors(triProjected.point3,scaleMatrix)
-    
-    table.insert(verts,triProjected)
+
+   table.insert(verts,triProjected)
     
   --wire frame mode
-  --drawTriangle(triProjected)
+  drawTriangle(triProjected)
 end
 
-  table.sort(verts,sortDepth)
+  
    
   local vv={}
+  table.sort(verts,sortDepth)
   
-  for i,v in ipairs(verts) do
-   
-    table.insert(vv,{v.point1.x,v.point1.y,0,1,1,1,1,1})
-    table.insert(vv,{v.point2.x,v.point2.y,1,0,1,1,1,1})
-    table.insert(vv,{v.point3.x,v.point3.y,1,1,1,1,1,1})
-    
+  for i,j in ipairs(verts) do
+    table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,0,0,1,1})
+    table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,1,1,1,1})
+    table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,1,0,1,1})
+  
   end
   
   mesh.geometry:setVertices(vv,1)
@@ -99,14 +96,14 @@ function constructMesh(mesh)
   local index={}
   local num=1
   
-   for i,v in ipairs(mesh.tris) do
-    table.insert(verts,{v.point1.x,v.point1.y,0,0,0,0,0,0})
-    table.insert(verts,{v.point2.x,v.point2.y,0,0,0,0,0,0})
-    table.insert(verts,{v.point3.x,v.point3.y,0,0,0,0,0,0})
+   for i,j in ipairs(mesh.tris) do
+    table.insert(verts,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,1,1,1,1})
+    table.insert(verts,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,1,1,1,1})
+    table.insert(verts,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,1,1,1,1})
   end
   
   mesh.geometry = love.graphics.newMesh(verts,'triangles') 
-  local image=love.graphics.newImage("skin.jpg")
+  local image=love.graphics.newImage("sk.jpg")
   mesh.geometry:setTexture(image)
 end
 

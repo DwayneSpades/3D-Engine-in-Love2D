@@ -77,7 +77,7 @@ local  res = matrix:new()
 end
  
  function multiplyVectorByMatrix(vect,mat)
- local res = point:new{x=0,y=0,z=0,w=1}
+ local res = point:new{x=0,y=0,z=0,w=1,uv=vect.uv}
   
   res.x = vect.x * mat[1][1] + vect.y * mat[1][2] + vect.z * mat[1][3] + vect.w * mat[1][4] 
   res.y = vect.x * mat[2][1] + vect.y * mat[2][2] + vect.z * mat[2][3] + vect.w * mat[2][4]
@@ -89,7 +89,7 @@ end
  end 
 
 function multiplyVectorByMatrixP(vect,mat)
- local res = point:new{x=0,y=0,z=0,w=1}
+ local res = point:new{x=0,y=0,z=0,w=1,uv=vect.uv}
   
   res.x = vect.x * mat[1][1] + vect.y * mat[1][2] + vect.z * mat[1][3] + mat[1][4] 
   res.y = vect.x * mat[2][1] + vect.y * mat[2][2] + vect.z * mat[2][3] + mat[2][4]
@@ -105,7 +105,7 @@ function multiplyVectorByMatrixP(vect,mat)
  end 
 
 function addVectors(vec1,vec2)
- local res = vect3D:new()
+ local res = point:new{x=0,y=0,z=0,w=1,uv=vec1.uv}
   
   res.x = vec1.x + vec2.x
   res.y = vec1.y + vec2.y
@@ -117,7 +117,7 @@ end
 
 
 function subtractVectors(vec1,vec2)
- local res = vect3D:new()
+ local res = point:new{x=0,y=0,z=0,w=1,uv=vec1.uv}
   
   res.x = vec1.x - vec2.x
   res.y = vec1.y - vec2.y
@@ -128,7 +128,7 @@ function subtractVectors(vec1,vec2)
 end
 
 function multiplyVectors(vec1,vec2)
- local res = vect3D:new()
+ local res = point:new{x=0,y=0,z=0,w=1,uv=vec1.uv}
   
   res.x = vec1.x * vec2.x
   res.y = vec1.y * vec2.y
@@ -140,7 +140,7 @@ end
 
 
 function divideVectors(vec1,vec2)
-local  res = vect3D:new()
+local res = point:new{x=0,y=0,z=0,w=1,uv=vec1.uv}
   
   res.x = vec1.x / vec2.x
   res.y = vec1.y / vec2.y
@@ -151,7 +151,7 @@ local  res = vect3D:new()
 end
 
 function addToVector(vec1,num)
-  local res = vect3D:new()
+  local res = point:new{x=0,y=0,z=0,w=1,uv=vec1.uv}
   
   res.x = vec1.x + num
   res.y = vec1.y + num
@@ -195,7 +195,7 @@ function multiplyVectorXY(vec1,num)
 end
 
 function divideVector(vec1,num)
-local  res = vect3D:new()
+local res = point:new{x=0,y=0,z=0,w=1,uv=vec1.uv}
   
   res.x = vec1.x / num
   res.y = vec1.y / num

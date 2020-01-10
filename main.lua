@@ -25,6 +25,7 @@ function love.load()
     y=0,
     z=0,
     w=1,
+    uv=nil,
     
     create = function(self,x1,y1,z1)
       self.x=x1
@@ -33,6 +34,11 @@ function love.load()
     end
   }
   
+  uvCoordinate= object:new
+  {
+    u=0,
+    v=0
+  }
   --a line in space
   triangle = object:new
   {
@@ -55,7 +61,8 @@ function love.load()
     x=0,
     y=0,
     z=0,
-    w=0
+    w=0,
+    uv=nil
   }
   
   --a matrix 
@@ -82,6 +89,7 @@ function love.load()
     points={},
     tris={},
     uvCoords={},
+    uvMat={},
     geomtry = 0,
     
     rSpeedX = 0,
@@ -91,11 +99,11 @@ function love.load()
     thetaY = 0,
     thetaZ = 0,
 
-    speed = 10.5,
+    speed = 0.5,
   
     Xpos = 0,
     Ypos = 0,
-    Zpos = -200,
+    Zpos = 0,
   
     accel = 0.0008,
     drag = 0.00025,
@@ -129,13 +137,14 @@ function love.load()
   
   modelNumber=0
   
-    for i=1,300 do
-      readObjFile('assets/Gull.obj')
-    end
+  
+    readObjFile('assets/cube.obj')
+    
     
   for i,v in ipairs(models) do
     constructMesh(v)
   end
+  
   spacing=0
   downing=0
   for i,v in ipairs(models) do
@@ -249,7 +258,7 @@ function love.draw()
     drawMesh(v)
   end
   
-  love.graphics.print('FPS:'..love.timer.getFPS(),0,50)
+  love.graphics.print('FPS:'..love.timer.getFPS(),0,580)
   love.graphics.print("Press and hold the arrow keys to rotate manually.",0,0,0,2,2)
   love.graphics.print("auto rotation turns on if no valid keys are pressed",0,32,0,1,1)
   love.graphics.print("press escape to close program.",0,560,0,2,2)
