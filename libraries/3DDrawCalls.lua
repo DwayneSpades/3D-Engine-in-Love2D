@@ -74,9 +74,9 @@ end
   if #mesh.uvCoords~=0 then
    for i,j in ipairs(verts) do
     
-    table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,0,0,1,1})
-    table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,0,1,1,1})
-    table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,0,1,1,1})
+    table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,1,1,1,1})
+    table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,1,1,1,1})
+    table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,1,1,1,1})
   end
   
 else
@@ -86,8 +86,9 @@ else
     table.insert(vv,{j.point2.x,j.point2.y,0,0,1,1,1,1})
     table.insert(vv,{j.point3.x,j.point3.y,0,0,1,1,1,1})
   end
-  end
-  
+end
+  local newPic =love.image.newImageData("sk.jpg")
+  image:replacePixels(newPic)
   mesh.geometry:setVertices(vv,1)
     love.graphics.setColor(1,1,1,1)
   love.graphics.draw(mesh.geometry,0,0)
@@ -123,7 +124,7 @@ else
   end
   end
   mesh.geometry = love.graphics.newMesh(verts,'triangles') 
-  local image=love.graphics.newImage("sk.jpg")
+  image=love.graphics.newImage("grid.jpg")
   mesh.geometry:setTexture(image)
 end
 

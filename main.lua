@@ -101,7 +101,7 @@ function love.load()
 
     speed = 0.5,
   
-    Xpos = 3000,
+    Xpos = 0,
     Ypos = 0,
     Zpos = 0,
   
@@ -137,7 +137,7 @@ function love.load()
   
   modelNumber=0
   
-  readObjFile('assets/cube.obj')
+  readObjFile('assets/Gull.obj')
     
     
   for i,v in ipairs(models) do
@@ -146,6 +146,7 @@ function love.load()
   
   spacing=0
   downing=0
+  --[[
   for i,v in ipairs(models) do
     v.Xpos = (spacing*85)-15
     v.Ypos = (downing*8)-15
@@ -156,7 +157,7 @@ function love.load()
     end
     
   end
-  
+  ]]
   
   
   timeLimit =10000
