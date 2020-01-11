@@ -40,7 +40,7 @@ function drawMesh(mesh)
   local worldMatrix = multiplyMatrices(rotationMatrixY,rotationMatrixX)
 
   worldMatrix = multiplyMatrices(worldMatrix,translationMatrix)
-
+  love.graphics.setColor(1,0,1,1)
   for i,v in ipairs(mesh.tris) do
     local triProjected = triangle:new()
     
@@ -71,15 +71,25 @@ end
   local vv={}
   table.sort(verts,sortDepth)
   
-  for i,j in ipairs(verts) do
+  if #mesh.uvCoords~=0 then
+   for i,j in ipairs(verts) do
+    
     table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,0,0,1,1})
-    table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,1,1,1,1})
-    table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,1,0,1,1})
+    table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,0,1,1,1})
+    table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,0,1,1,1})
+  end
   
+else
+  for i,j in ipairs(verts) do
+    
+    table.insert(vv,{j.point1.x,j.point1.y,0,0,1,1,1,1})
+    table.insert(vv,{j.point2.x,j.point2.y,0,0,1,1,1,1})
+    table.insert(vv,{j.point3.x,j.point3.y,0,0,1,1,1,1})
+  end
   end
   
   mesh.geometry:setVertices(vv,1)
-  
+    love.graphics.setColor(1,1,1,1)
   love.graphics.draw(mesh.geometry,0,0)
 end
 
@@ -96,12 +106,22 @@ function constructMesh(mesh)
   local index={}
   local num=1
   
+  if #mesh.uvCoords~=0 then
    for i,j in ipairs(mesh.tris) do
+    
     table.insert(verts,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,1,1,1,1})
     table.insert(verts,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,1,1,1,1})
     table.insert(verts,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,1,1,1,1})
   end
   
+else
+  for i,j in ipairs(mesh.tris) do
+    
+    table.insert(verts,{j.point1.x,j.point1.y,0,0,1,1,1,1})
+    table.insert(verts,{j.point2.x,j.point2.y,0,0,1,1,1,1})
+    table.insert(verts,{j.point3.x,j.point3.y,0,0,1,1,1,1})
+  end
+  end
   mesh.geometry = love.graphics.newMesh(verts,'triangles') 
   local image=love.graphics.newImage("sk.jpg")
   mesh.geometry:setTexture(image)

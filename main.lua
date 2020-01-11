@@ -101,7 +101,7 @@ function love.load()
 
     speed = 0.5,
   
-    Xpos = 0,
+    Xpos = 3000,
     Ypos = 0,
     Zpos = 0,
   
@@ -109,7 +109,7 @@ function love.load()
     drag = 0.00025,
     
   }
-
+--hello
   cam = object:inherit{0,0,-2.5}
   scaler =100
   
@@ -119,8 +119,8 @@ function love.load()
       screenWidth = love.graphics.getWidth()
       screenHeight = love.graphics.getHeight()
 
-      local nearPlane= 0.1
-      local farPlane = 1000
+      local nearPlane= 0.3
+      local farPlane = 100
       local FOV = 90 --90 for square screen --60 for widescreen
         
       local a = screenWidth/screenHeight
@@ -137,8 +137,7 @@ function love.load()
   
   modelNumber=0
   
-  
-    readObjFile('assets/cube.obj')
+  readObjFile('assets/cube.obj')
     
     
   for i,v in ipairs(models) do

@@ -13,6 +13,7 @@ function readObjFile(file)
   local uvPattern = '^vt (%S+) (%S+)'
   local facePattern1 = '^f (%d+) (%d+) (%d+)'
   local facePattern2 = '^f (%d+)/(%d+) (%d+)/(%d+) (%d+)/(%d+)'
+  
   local bufferOrder = 1
   
   local pointsBuffer ={}
@@ -72,7 +73,7 @@ function readObjFile(file)
       point11=tonumber(point11)
       point22=tonumber(point22)
       point33=tonumber(point33)
-      
+    
       local mapPoint11,mapPoint22,mapPoint33 = 
       line:gsub(facePattern2,'%2'),
       line:gsub(facePattern2,'%4'),
