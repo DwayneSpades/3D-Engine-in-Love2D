@@ -1,26 +1,26 @@
 --demo update code
 
-function spinObjectDemo(mesh)
+function spinObjectDemo()
   
   
-  if mesh.rSpeedX>0 then
-    mesh.rSpeedX=mesh.rSpeedX-mesh.drag
+  if control.rSpeedX>0 then
+    control.rSpeedX=control.rSpeedX-control.drag
     
-  elseif mesh.rSpeedX<0 then
-    mesh.rSpeedX=mesh.rSpeedX+mesh.drag
+  elseif control.rSpeedX<0 then
+    control.rSpeedX=control.rSpeedX+control.drag
   
   end
   
-  if mesh.rSpeedY>0 then
-    mesh.rSpeedY=mesh.rSpeedY-mesh.drag
+  if control.rSpeedY>0 then
+    control.rSpeedY=control.rSpeedY-control.drag
   elseif mesh.rSpeedY<0 then
-    mesh.rSpeedY=mesh.rSpeedY+mesh.drag
+    control.rSpeedY=control.rSpeedY+control.drag
 
   end
   
 
-  mesh.thetaX=mesh.thetaX+mesh.rSpeedX
-  mesh.thetaY=mesh.thetaY+mesh.rSpeedY
+  control.thetaX=control.thetaX+control.rSpeedX
+  control.thetaY=control.thetaY+control.rSpeedY
   
 --[[
   rotTimer=rotTimer-1
@@ -49,49 +49,49 @@ function spinObjectDemo(mesh)
   if love.keyboard.isDown('up') then
     --autoRotActive=false
     --rotTimer=timeLimit
-    mesh.rSpeedX=mesh.rSpeedX-mesh.accel
+    control.rSpeedX=control.rSpeedX-control.accel
   
   elseif love.keyboard.isDown('down') then
     --autoRotActive=false
    -- rotTimer=timeLimit
-    mesh.rSpeedX=mesh.rSpeedX+mesh.accel
+    control.rSpeedX=control.rSpeedX+control.accel
   end
   if love.keyboard.isDown('left') then
     --autoRotActive=false
     --rotTimer=timeLimit
-    mesh.rSpeedY=mesh.rSpeedY+mesh.accel
+    control.rSpeedY=control.rSpeedY+control.accel
   
   elseif love.keyboard.isDown('right') then
     --autoRotActive=false
     --rotTimer=timeLimit
-    mesh.rSpeedY=mesh.rSpeedY-mesh.accel
+    control.rSpeedY=control.rSpeedY-control.accel
   end
   
   --WASD controls for 3d Object
   if love.keyboard.isDown('w') then
     
-    mesh.Zpos = mesh.Zpos - mesh.speed
+    control.Zpos = control.Zpos - control.speed
   end
   if love.keyboard.isDown('s') then
     
-    mesh.Zpos = mesh.Zpos + mesh.speed
+    control.Zpos = control.Zpos + control.speed
   end
   if love.keyboard.isDown('a') then
     
-    mesh.Xpos = mesh.Xpos + mesh.speed
+    control.Xpos = control.Xpos + control.speed
   end
   if love.keyboard.isDown('d') then
     
-    mesh.Xpos = mesh.Xpos - mesh.speed
+    control.Xpos = control.Xpos - control.speed
   end
   
   if love.keyboard.isDown('q') then
     
-    mesh.Ypos = mesh.Ypos - mesh.speed
+    control.Ypos = control.Ypos - control.speed
   end
   if love.keyboard.isDown('e') then
     
-    mesh.Ypos = mesh.Ypos + mesh.speed
+    control.Ypos = control.Ypos + control.speed
   end
   
 end
