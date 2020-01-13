@@ -74,9 +74,9 @@ end
   if #mesh.uvCoords~=0 then
    for i,j in ipairs(verts) do
     
-    table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,1,0,1,30+(mesh.Zpos/10)})
-    table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,0,1,1,30+(mesh.Zpos/10)})
-    table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,0,1,1,30+(mesh.Zpos/10)})
+    table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,1,0,1,90+(mesh.Zpos/10)})
+    table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,0,1,1,90+(mesh.Zpos/10)})
+    table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,0,1,1,90+(mesh.Zpos/10)})
   end
   
 else

@@ -3,7 +3,7 @@ require 'libraries/3DMath'
 require 'libraries/3DDemos'
 require 'libraries/3DDrawCalls'
 require 'libraries/objParser'
-
+require 'libraries/3DClasses'
 
 --Written by Preston Adams
 --steps to render 3d scene 
@@ -19,130 +19,18 @@ require 'libraries/objParser'
 function love.load()
   
   --a point in space
-  point = object:new
-  {
-    x=0,
-    y=0,
-    z=0,
-    w=1,
-    uv=nil,
-    
-    create = function(self,x1,y1,z1)
-      self.x=x1
-      self.y=y1
-      self.z=z1
-    end
-  }
   
-  uvCoordinate= object:new
-  {
-    u=0,
-    v=0
-  }
-  --a line in space
-  triangle = object:new
-  {
-    point1=nil,
-    point2=nil,
-    point3=nil,
-    
-    create = function(self,p1,p2,p3)
-      self.point1=p1
-      self.point2=p2
-      self.point3=p3
-    end
-  }
-  
-  
-  
-  --a vector
-  vect3D = object:new
-  {
-    x=0,
-    y=0,
-    z=0,
-    w=0,
-    uv=nil
-  }
-  
-  --a matrix 
-  matrix = object:new
-  {
-    {0,0,0,0},
-    {0,0,0,0},
-    {0,0,0,0},
-    {0,0,0,0}
-  }
-  
-  
-  projectionMatrix = matrix:new
-  {
-      {0,0,0,0},
-      {0,0,0,0},
-      {0,0,0,0},
-      {0,0,0,0}
-  }
-  
-  mesh = object:new
-  {
-    transform={},
-    points={},
-    tris={},
-    uvCoords={},
-    uvMat={},
-    geomtry = 0,
-    
-    rSpeedX = 0,
-    rSpeedY = 0,
-  
-    thetaX = 113,
-    thetaY = 0,
-    thetaZ = 0,
-
-    speed = 0.5,
-  
-    Xpos = 0,
-    Ypos = 0,
-    Zpos = -100,
-  
-    accel = 0.0008,
-    drag = 0.00025,
-    
-  }
 --hello
-  cam = object:inherit{0,0,-2.5}
-  scaler =100
-  
-  iprojectionMatrix=projectionMatrix:new()
-  
-  --Projection Matrix 
-      screenWidth = love.graphics.getWidth()
-      screenHeight = love.graphics.getHeight()
-
-      local nearPlane= 0.3
-      local farPlane = 100
-      local FOV = 90 --90 for square screen --60 for widescreen
-        
-      local a = screenWidth/screenHeight
-      local d = 1/math.tan(FOV *0.5 / 180 * 3.1415926535)
-       
-      iprojectionMatrix[1][1]=(a/d)
-      iprojectionMatrix[2][2]=(d)
-      iprojectionMatrix[3][3]=-((farPlane+nearPlane)/(farPlane-nearPlane))
-      iprojectionMatrix[4][3]=-((-2*farPlane*nearPlane)/(farPlane-nearPlane))
-      iprojectionMatrix[3][4]=-1
   
   local imports={}
   models = {}
   
   modelNumber=0
   
-  for i=1,80 do
+  for i=1,20 do
     readObjFile('assets/cube.obj')
   end
-  
-  
-  
+ 
   for i,v in ipairs(models) do
     constructMesh(v)
   end
@@ -283,12 +171,17 @@ function love.draw()
   for i,v in ipairs(models) do
     drawMesh(v)
     if v.Zpos>-35.5 then
-      v.Zpos=-350
-      v.Xpos=math.random(200,-400)
+      v.Zpos=math.random(-350,-400)
+      v.Xpos=math.random(-200,-400)
       v.Ypos=math.random(0,150)
     end
+     if v.Xpos>300.5 then
+      v.Zpos=math.random(-200,-450)
+      v.Xpos=math.random(-200,-400)
+      v.Ypos=math.random(300,-300)
+    end
     
-    v.Zpos=v.Zpos+0.5
+    v.Zpos=v.Zpos+0.05
     v.Ypos=v.Ypos-0.3
     v.Xpos=v.Xpos+0.6
     v.rSpeedX=0.005
