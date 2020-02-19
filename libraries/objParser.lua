@@ -205,7 +205,6 @@ function readObjFileUnique(file)
 end
 
 models[modelNumber].tris=triList
- 
 models[modelNumber].uvCoords=uvList
 
 return

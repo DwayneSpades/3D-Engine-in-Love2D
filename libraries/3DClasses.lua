@@ -25,7 +25,7 @@ point = object:new
     point1=nil,
     point2=nil,
     point3=nil,
-    
+    dp=1,
     create = function(self,p1,p2,p3)
       self.point1=p1
       self.point2=p2
@@ -79,7 +79,7 @@ point = object:new
     thetaY = 0,
     thetaZ = 0,
 
-    speed = 0.5,
+    speed = 3,
   
     Xpos = 0,
     Ypos = 0,
@@ -90,10 +90,22 @@ point = object:new
     
   }
   
-  cam = object:inherit{0,0,-2.5}
+  camera = object:inherit{x=0,y=0,z=-2.5}
+  
+  lightDirection=matrix:new
+  {
+    x=0,
+    y=0,
+    z=-1,
+    w=0,
+    uv=nil
+  }
+  
+  lightDirection  = normalizeVector(lightDirection)
+  
   scaler =100
   
-iprojectionMatrix=projectionMatrix:new()
+  iprojectionMatrix=projectionMatrix:new()
   
   --Projection Matrix 
       screenWidth = love.graphics.getWidth()

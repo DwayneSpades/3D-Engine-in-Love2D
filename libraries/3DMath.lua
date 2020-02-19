@@ -75,6 +75,22 @@ local  res = matrix:new()
   
   return res
 end
+
+function dotProduct(vect1,vect2)
+  return (vect1.x*vect2.x) + 
+          (vect1.y*vect2.y) +
+          (vect1.z*vect2.z) 
+end
+
+
+function crossProduct(vect1,vect2)
+  return point:new{
+    x = vect1.y*vect2.z - vect1.z*vect2.y,
+    y = -1*(vect1.x*vect2.z - vect1.z*vect2.x),
+    z = vect1.x * vect2.y - vect1.y*vect2.y
+  }
+   
+ end
  
  function multiplyVectorByMatrix(vect,mat)
  local res = point:new{x=0,y=0,z=0,w=1,uv=vect.uv}
@@ -162,7 +178,7 @@ function addToVector(vec1,num)
 end
 
 function subtractFromVector(vec1,num)
- local res = vect3D:new()
+  local res = point:new{x=0,y=0,z=0,w=1,uv=vect.uv}
   
   res.x = vec1.x - num
   res.y = vec1.y - num
@@ -173,7 +189,7 @@ function subtractFromVector(vec1,num)
 end
 
 function multiplyVector(vec1,num)
- local res = vect3D:new()
+  local res = point:new{x=0,y=0,z=0,w=1,uv=vec1.uv}
   
   res.x = vec1.x * num
   res.y = vec1.y * num
@@ -184,7 +200,7 @@ function multiplyVector(vec1,num)
 end
 
 function multiplyVectorXY(vec1,num)
-  local res = vect3D:new()
+   local res = point:new{x=0,y=0,z=0,w=1,uv=vec1.uv}
   
   res.x = vec1.x * num
   res.y = vec1.y * num
@@ -207,7 +223,7 @@ end
 
 function flipVector(vec)
     
- local   res = vect3D:new()
+  local res = point:new{x=0,y=0,z=0,w=1,uv=vec.uv}
     
     res.x = vec.x*-1
     res.y = vec.y*-1
@@ -217,7 +233,7 @@ function flipVector(vec)
 end
 
 function normLengthVector(vec)
-local  res = vect3D:new()
+ local res = point:new{x=0,y=0,z=0,w=1,uv=vec.uv}
   
   res.x = vec.x * vec.x
   res.y = vec.y * vec.y
@@ -231,7 +247,7 @@ end
 
 function normalizeVector(vec)
   
-local  res = vect3D:new()
+ local res = point:new{x=0,y=0,z=0,w=1,uv=vec.uv}
   length = normLengthVector(vec)
   
   res.x = vec.x/length
