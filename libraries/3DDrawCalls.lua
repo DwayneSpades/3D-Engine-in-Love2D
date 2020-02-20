@@ -61,7 +61,7 @@ function drawMesh(mesh)
     if(
       (normal.x * triProjected.point1.x - camera.x)+
       (normal.y * triProjected.point1.y - camera.y)+
-      (normal.z * triProjected.point1.z - 10) < 0
+      (normal.z * triProjected.point1.z - camera.z) < -1.5
     ) then
     
     
@@ -78,6 +78,7 @@ function drawMesh(mesh)
     triProjected.point1 = multiplyVectors(triProjected.point1,scaleMatrix)
     triProjected.point2 = multiplyVectors(triProjected.point2,scaleMatrix)
     triProjected.point3 = multiplyVectors(triProjected.point3,scaleMatrix)
+    
     table.insert(verts,triProjected)
     
     --drawTriangle(triProjected)
@@ -101,9 +102,9 @@ end
   if #mesh.uvCoords~=0 then
     for i,j in ipairs(verts) do
    
-      table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,j.dp+1,j.dp+1,j.dp+1,1})
-      table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,j.dp+1,j.dp+1,j.dp+1,1})
-      table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,j.dp+1,j.dp+1,j.dp+1,1})
+      table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,-1*j.dp,-1*j.dp,-1*j.dp,1})
+      table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,-1*j.dp,-1*j.dp,-1*j.dp,1})
+      table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,-1*j.dp,-1*j.dp,-1*j.dp,1})
       --[[
       table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,1,1,1,90+(mesh.Zpos/10)})
       table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,1,1,1,90+(mesh.Zpos/10)})
@@ -114,7 +115,7 @@ end
 else
   for i,j in ipairs(verts) do
     
-    table.insert(vv,{j.point1.x,j.point1.y,0,1,j.dp,j.dp,j.dp,1})
+    table.insert(vv,{j.point1.x,j.point1.y,1,1,j.dp,j.dp,j.dp,1})
     table.insert(vv,{j.point2.x,j.point2.y,1,1,j.dp,j.dp,j.dp,1})
     table.insert(vv,{j.point3.x,j.point3.y,1,1,j.dp,j.dp,j.dp,1})
   end
@@ -158,8 +159,8 @@ end
   
   
   mesh.geometry = love.graphics.newMesh(verts,'triangles') 
- -- image=love.graphics.newImage("sk.jpg")
-  --mesh.geometry:setTexture(image)
+  image=love.graphics.newImage("planet.jpg")
+  mesh.geometry:setTexture(image)
 end
 
 function rotateShape(model)

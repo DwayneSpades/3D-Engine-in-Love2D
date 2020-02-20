@@ -87,7 +87,7 @@ function crossProduct(vect1,vect2)
   return point:new{
     x = vect1.y*vect2.z - vect1.z*vect2.y,
     y = -1*(vect1.x*vect2.z - vect1.z*vect2.x),
-    z = vect1.x * vect2.y - vect1.y*vect2.y
+    z = vect1.x * vect2.y - vect1.y*vect2.x
   }
    
  end

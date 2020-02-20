@@ -24,7 +24,7 @@ function love.load()
   
   modelNumber=0
   
-  for i=1,1 do
+  for i=1,50 do
     readObjFile('assets/land.obj')
   end
  
@@ -39,9 +39,9 @@ function love.load()
   backing=0
   
   for i,v in ipairs(models) do
-    v.Xpos = (spacing*20)-40
-    v.Ypos = (downing*20)-80
-    v.Zpos = (backing*-20)-200
+    v.Xpos = (spacing*20)-1
+    v.Ypos = (downing*5)-1
+    v.Zpos = (backing*-0.5)-10
     --v.thetaX = 40
     --v.thetaY = 90
     downing=downing+1
@@ -64,7 +64,7 @@ function love.load()
   love.window.setTitle('3D Cube Demo')
   love.graphics.setFrontFaceWinding('cw')
   love.graphics.setMeshCullMode('back')
-  --city=love.graphics.newImage("topDownCity.jpg")
+  city=love.graphics.newImage("space.jpg")
   
   --tri1={point1=p1,point2=p2,point3=p3}
  
@@ -99,28 +99,31 @@ function love.draw()
   mapY=mapY+0.03
   love.graphics.draw(city,mapX,mapY,0,0.2,0.2)
   ]]
+  love.graphics.setColor(1,1,1,1)
+  love.graphics.draw(city,mapX,mapY,0,2,2)
+  
   table.sort(models,zBuffer)
   
   love.graphics.setColor(1,1,1)
-  
+  local spinY=0.05
   
   for i,v in ipairs(models) do
     drawMesh(v)
     
    
-    if v.Xpos>300.5 then
-      --v.Zpos=math.random(-200,-450)
-      --v.Xpos=math.random(-200,-400)
-      --v.Ypos=math.random(300,-300)
+    if v.Zpos>-1 then
+      v.Zpos=math.random(-20,-20)
+      v.Xpos=math.random(-10,10)
+      v.Ypos=math.random(-1,1)
     end
     
-    --v.Zpos=v.Zpos+0.05
-   -- v.Ypos=v.Ypos-0.3
-    --v.Xpos=v.Xpos+0.6
+    v.Zpos=v.Zpos+0.05
+    --v.Ypos=v.Ypos-0.03
+    --v.Xpos=v.Xpos+0.06
     --v.rSpeedX=0.005
-    --v.rSpeedY=0.005
+    
     --v.thetaX=v.thetaX+v.rSpeedX
-    --v.thetaY=v.thetaY+v.rSpeedY
+    v.thetaY=v.thetaY+spinY
   
   end
 

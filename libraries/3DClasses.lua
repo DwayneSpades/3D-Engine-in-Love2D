@@ -79,7 +79,7 @@ point = object:new
     thetaY = 0,
     thetaZ = 0,
 
-    speed = 3,
+    speed = 0.05,
   
     Xpos = 0,
     Ypos = 0,
@@ -90,12 +90,12 @@ point = object:new
     
   }
   
-  camera = object:inherit{x=0,y=0,z=-2.5}
+  camera = object:inherit{x=0,y=0,z=1.5}
   
   lightDirection=matrix:new
   {
-    x=0,
-    y=0,
+    x=1,
+    y=1,
     z=-1,
     w=0,
     uv=nil
