@@ -19,13 +19,15 @@ function drawMesh(mesh)
       {0,0,0,1}
   }
   
-  local rotationMatrixY = matrix:new
+  
+local rotationMatrixY = matrix:new
   {
       {math.cos(mesh.thetaY),0,math.sin(mesh.thetaY),0},
       {0,1,0,0},
       {-math.sin(mesh.thetaY),0,math.cos(mesh.thetaY),0},
       {0,0,0,1}
   }
+  
   
   local translationMatrix = matrix:new
   {
@@ -61,7 +63,7 @@ function drawMesh(mesh)
     if(
       (normal.x * triProjected.point1.x - camera.x)+
       (normal.y * triProjected.point1.y - camera.y)+
-      (normal.z * triProjected.point1.z - camera.z) < -1.5
+      (normal.z * triProjected.point1.z - camera.z) < 0
     ) then
     
     
@@ -102,9 +104,9 @@ end
   if #mesh.uvCoords~=0 then
     for i,j in ipairs(verts) do
    
-      table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,-1*j.dp,-1*j.dp,-1*j.dp,1})
-      table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,-1*j.dp,-1*j.dp,-1*j.dp,1})
-      table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,-1*j.dp,-1*j.dp,-1*j.dp,1})
+      table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,j.dp,j.dp,j.dp,1})
+      table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,j.dp,j.dp,j.dp,1})
+      table.insert(vv,{j.point3.x,j.point3.y,j.point3.uv.u,j.point3.uv.v,j.dp,j.dp,j.dp,1})
       --[[
       table.insert(vv,{j.point1.x,j.point1.y,j.point1.uv.u,j.point1.uv.v,1,1,1,90+(mesh.Zpos/10)})
       table.insert(vv,{j.point2.x,j.point2.y,j.point2.uv.u,j.point2.uv.v,1,1,1,90+(mesh.Zpos/10)})

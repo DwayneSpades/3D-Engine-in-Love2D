@@ -24,7 +24,7 @@ function love.load()
   
   modelNumber=0
   
-  for i=1,50 do
+  for i=1,1 do
     readObjFile('assets/land.obj')
   end
  
@@ -41,7 +41,7 @@ function love.load()
   for i,v in ipairs(models) do
     v.Xpos = (spacing*20)-1
     v.Ypos = (downing*5)-1
-    v.Zpos = (backing*-0.5)-10
+    v.Zpos = (backing*-8)-10
     --v.thetaX = 40
     --v.thetaY = 90
     downing=downing+1
@@ -110,20 +110,20 @@ function love.draw()
   for i,v in ipairs(models) do
     drawMesh(v)
     
-   
+   --[[
     if v.Zpos>-1 then
-      v.Zpos=math.random(-20,-20)
+      v.Zpos=math.random(-50,-20)
       v.Xpos=math.random(-10,10)
-      v.Ypos=math.random(-1,1)
+      v.Ypos=math.random(-20,0)
     end
-    
-    v.Zpos=v.Zpos+0.05
+    ]]
+   -- v.Zpos=v.Zpos+0.05
     --v.Ypos=v.Ypos-0.03
     --v.Xpos=v.Xpos+0.06
     --v.rSpeedX=0.005
     
-    --v.thetaX=v.thetaX+v.rSpeedX
-    v.thetaY=v.thetaY+spinY
+    --v.thetaZ=v.thetaZ+spinY
+    --v.thetaY=v.thetaY+spinY
   
   end
 

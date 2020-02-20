@@ -95,8 +95,8 @@ point = object:new
   lightDirection=matrix:new
   {
     x=1,
-    y=1,
-    z=-1,
+    y=0,
+    z=1,
     w=0,
     uv=nil
   }
